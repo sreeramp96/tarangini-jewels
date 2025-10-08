@@ -25,6 +25,8 @@ return new class extends Migration
             $table->decimal('discount_price', 10, 2)->nullable();
             $table->integer('stock')->default(0);
             $table->boolean('is_featured')->default(false);
+            $table->string('image')->nullable(); // main image, used in product card or thumbnail.
+            $table->json('images')->nullable();  // gallery images (JSON array), images → optional array of image URLs (for gallery display or product detail slider
             $table->timestamps();
         });
     }

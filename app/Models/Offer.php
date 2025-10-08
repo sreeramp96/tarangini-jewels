@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Offer extends Model
 {
-    protected $fillable = ['name', 'type', 'value', 'start_date', 'end_date', 'applicable_to'];
+    protected $fillable = ['name', 'type', 'value', 'applicable_to'];
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+    ];
 }

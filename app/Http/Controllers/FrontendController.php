@@ -12,9 +12,11 @@ class FrontendController extends Controller
 {
     public function index()
     {
-        $featuredProducts = Product::latest()->take(8)->get();
-        $offers = Offer::where('active', true)->take(3)->get();
-        $testimonials = Testimonial::latest()->take(5)->get();
+        $featuredProducts = Product::take(8)->get();
+        $offers = Offer::where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->get();
+        $testimonials = Testimonial::latest()->take(3)->get();
 
         return view('frontend.index', compact('featuredProducts', 'offers', 'testimonials'));
     }

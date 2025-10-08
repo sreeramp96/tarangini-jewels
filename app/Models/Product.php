@@ -14,8 +14,9 @@ class Product extends Model
         'price',
         'discount_price',
         'stock',
-        'is_featured'
+        'is_featured',
     ];
+    protected $casts = ['images' => 'array',];
     public function category()
     {
         return $this->belongsTo(Category::class);
