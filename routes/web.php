@@ -27,14 +27,24 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/', [FrontendController::class, 'index'])->name('home');
-Route::get('/shop', [ProductController::class, 'index'])->name('shop');
-Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
-Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
-Route::get('/offers', [OfferController::class, 'index'])->name('offers');
-Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials');
-Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+// Route::get('/', [FrontendController::class, 'index'])->name('home');
+// Route::get('/shop', [ProductController::class, 'index'])->name('shop');
+// Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+// Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
+// Route::get('/offers', [OfferController::class, 'index'])->name('offers');
+// Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials');
+// Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+// Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+
+Route::controller(FrontendController::class)->group(function () {
+    Route::get('/', 'index')->name('home');
+    Route::get('/shop', 'shop')->name('shop');
+    Route::get('/product/{slug}', 'product')->name('product');
+    Route::get('/offers', 'offers')->name('offers');
+    Route::get('/testimonials', 'testimonials')->name('testimonials');
+    Route::get('/contact', 'contact')->name('contact');
+});
 
 
 require __DIR__ . '/auth.php';

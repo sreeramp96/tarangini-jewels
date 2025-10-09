@@ -17,7 +17,7 @@
                     <div class="p-4">
                         <h3 class="font-semibold text-gray-800">{{ $product->name }}</h3>
                         <p class="text-gray-600 mb-2">₹{{ number_format($product->price, 2) }}</p>
-                        <a href="{{ route('product.show', $product->slug) }}"
+                        <a href="{{ route('product', $product->slug) }}"
                             class="text-amber-600 font-medium hover:underline">View Details</a>
                     </div>
                 </div>
