@@ -10,14 +10,14 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::paginate(12);
+        $products = Product::with(['category', 'images', 'tags'])->paginate(12);
         $categories = Category::all();
         return view('frontend.shop', compact('products', 'categories'));
     }
 
     public function show($slug)
     {
-        $product = Product::where('slug', $slug)->firstOrFail();
+        $product = Product::with(['images', 'tags'])->where('slug', $slug)->firstOrFail();
         return view('frontend.product', compact('product'));
     }
 }

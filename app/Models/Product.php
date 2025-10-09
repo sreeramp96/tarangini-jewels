@@ -16,7 +16,7 @@ class Product extends Model
         'stock',
         'is_featured',
     ];
-    protected $casts = ['images' => 'array',];
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -25,6 +25,15 @@ class Product extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'product_tag');
+    }
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+
+    public function mainImage()
+    {
+        return $this->images()->where('is_primary', true);
     }
 
     public function scopeSale($query)

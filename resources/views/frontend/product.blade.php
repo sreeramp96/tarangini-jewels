@@ -3,7 +3,11 @@
 @section('content')
     <div class="max-w-5xl mx-auto px-4">
         <div class="grid md:grid-cols-2 gap-8">
-            <img src="{{ $product->image }}" class="rounded-lg shadow">
+            @php
+                $mainImage = $product->images()->where('is_primary', 1)->first();
+                $imageUrl = $mainImage ? asset('storage/' . $mainImage->image_path) : '/placeholder.jpg';
+            @endphp
+            <img src="{{ $imageUrl }}" class="rounded-lg shadow" alt="{{ $product->name }}">
             <div>
                 <h2 class="text-3xl font-semibold text-amber-700">{{ $product->name }}</h2>
                 <p class="text-gray-600 my-4">{{ $product->description }}</p>

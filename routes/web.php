@@ -9,10 +9,6 @@ use App\Http\Controllers\OfferController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\ContactController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Route::get('/', [FrontendController::class, 'index'])->name('home');
 Route::get('/shop', [ProductController::class, 'index'])->name('shop');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
@@ -21,10 +17,6 @@ Route::get('/offers', [OfferController::class, 'index'])->name('offers');
 Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {

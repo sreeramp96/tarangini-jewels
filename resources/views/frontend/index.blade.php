@@ -11,9 +11,12 @@
         <h2 class="text-2xl font-bold mb-6 text-center">Featured Products</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach ($featuredProducts as $product)
+                @php
+                    $mainImage = $product->images()->where('is_primary', 1)->first();
+                    $imageUrl = $mainImage ? asset('storage/' . $mainImage->image_path) : '/placeholder.jpg';
+                @endphp
                 <div class="bg-white shadow rounded-lg overflow-hidden">
-                    <img src="{{ $product->image ?? '/placeholder.jpg' }}" class="w-full h-48 object-cover"
-                        alt="{{ $product->name }}">
+                    <img src="{{ $imageUrl }}" class="w-full h-48 object-cover" alt="{{ $product->name }}">
                     <div class="p-4">
                         <h3 class="font-semibold text-gray-800">{{ $product->name }}</h3>
                         <p class="text-gray-600 mb-2">₹{{ number_format($product->price, 2) }}</p>
@@ -31,7 +34,13 @@
             @forelse($offers as $offer)
                 <div class="bg-white shadow p-6 rounded-lg text-center">
                     <h3 class="font-bold text-amber-700">{{ $offer->name }}</h3>
-                    <p class="text-gray-600 mt-2">{{ $offer->value }}% OFF</p>
+
+                    {{-- --- CRITICAL FIX: DYNAMIC OFFER TYPE --- --}}
+                    <p class="text-gray-600 mt-2">
+                        {{ $offer->type === 'percentage' ? $offer->value . '% OFF' : '₹' . number_format($offer->value, 0) . ' OFF' }}
+                    </p>
+                    {{-- --- END CRITICAL FIX --- --}}
+
                     <p class="text-sm text-gray-500 mt-1">Valid till {{ $offer->end_date->format('M d, Y') }}</p>
                 </div>
             @empty
