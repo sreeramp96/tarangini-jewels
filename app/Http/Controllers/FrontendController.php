@@ -15,8 +15,9 @@ class FrontendController extends Controller
         $featuredProducts = Product::latest()->take(8)->get();
         $categories = Category::all();
         $offers = Offer::where('active', 1)->get();
+        $testimonials = Testimonial::latest()->take(3)->get();
 
-        return view('frontend.index', compact('featuredProducts', 'categories', 'offers'));
+        return view('frontend.index', compact('featuredProducts', 'categories', 'offers', 'testimonials'));
     }
 
     public function shop()

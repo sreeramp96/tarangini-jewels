@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "ZEN-SERIF"; /* Choose a name for your font */
+    src: url("/fonts/ZEN-SERIF-TTF-Regular.ttf") format("truetype"); /* Path to your font file */
+    font-weight: normal; /* Adjust if your font has different weights */
+    font-style: normal; /* Adjust if your font has different styles */
+}
+
+body {
+    font-family: "ZEN-SERIF", sans-serif; /* Add fallback fonts */
+}
