@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tarangini Jewels</title>
-
+<link rel="icon" type="image/x-icon" href="{{ asset('storage/Images/logo.ico') }}">
 <link rel="preconnect" href="https://fonts.bunny.net">
 {{--
 <link href="https://fonts.bunny.net/css?family=playfair-display:400,600,700|poppins:300,400,500" rel="stylesheet" />
