@@ -128,15 +128,10 @@
     </section>
 
     <section id="testimonials" class="bg-[#0b3d2e] px-6 lg:px-20 py-20">
-        {{-- Section Heading --}}
         <h3 class="text-3xl lg:text-4xl font-semibold text-center gold-gradient mb-12 hero-text">
             Words of Radiance
         </h3>
-
-        {{-- Grid container for the testimonial cards --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            {{-- Testimonial Card 1 --}}
             <div
                 class="relative flex flex-col bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl p-8 text-center glow-hover transition">
                 <x-heroicon-s-chat-bubble-left-right class="absolute top-4 left-4 w-12 h-12 text-[#d4af37]/10" />
@@ -146,7 +141,6 @@
                     cherish forever. The attention to detail is simply unparalleled."
                 </p>
 
-                {{-- NEW: Star Rating --}}
                 <div class="flex justify-center items-center space-x-1 mb-4">
                     <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
                     <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
@@ -162,8 +156,6 @@
                     Mumbai, Maharashtra
                 </p>
             </div>
-
-            {{-- Testimonial Card 2 --}}
             <div
                 class="relative flex flex-col bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl p-8 text-center glow-hover transition">
                 <x-heroicon-s-chat-bubble-left-right class="absolute top-4 left-4 w-12 h-12 text-[#d4af37]/10" />
@@ -172,8 +164,6 @@
                     "I ordered a ring for our anniversary, and the service was as brilliant as the diamond itself. From
                     selection to delivery, the experience was seamless and personal."
                 </p>
-
-                {{-- NEW: Star Rating --}}
                 <div class="flex justify-center items-center space-x-1 mb-4">
                     <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
                     <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
@@ -190,7 +180,6 @@
                 </p>
             </div>
 
-            {{-- Testimonial Card 3 --}}
             <div
                 class="relative flex flex-col bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl p-8 text-center glow-hover transition">
                 <x-heroicon-s-chat-bubble-left-right class="absolute top-4 left-4 w-12 h-12 text-[#d4af37]/10" />
@@ -200,7 +189,6 @@
                     sentiment while infusing new life into the design. Truly exceptional artists."
                 </p>
 
-                {{-- NEW: Star Rating --}}
                 <div class="flex justify-center items-center space-x-1 mb-4">
                     <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
                     <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
