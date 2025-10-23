@@ -1,0 +1,95 @@
+@extends('admin.layouts.app')
+
+@section('content')
+    <h1 class="text-3xl font-semibold text-gray-800 mb-6">Edit Product: {{ $product->name }}</h1>
+
+    <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl">
+        <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-700 font-medium mb-2">Product Name</label>
+                        <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 @error('name') border-red-500 @enderror">
+                        @error('name')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="category" class="block text-gray-700 font-medium mb-2">Category</label>
+                        <select id="category" name="category_id"
+                            class="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-yellow-500 @error('category_id') border-red-500 @enderror">
+                            <option value="">Select a category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('category_id')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="description" class="block text-gray-700 font-medium mb-2">Description</label>
+                        <textarea id="description" name="description" rows="6"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">{{ old('description', $product->description) }}</textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <label for="price" class="block text-gray-700 font-medium mb-2">Price (₹)</label>
+                            <input type="number" id="price" name="price" step="0.01"
+                                value="{{ old('price', $product->price) }}"
+                                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 @error('price') border-red-500 @enderror">
+                            @error('price')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="mb-4">
+                            <label for="stock" class="block text-gray-700 font-medium mb-2">Stock Quantity</label>
+                            <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}"
+                                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 @error('stock') border-red-500 @enderror">
+                            @error('stock')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="discount_price" class="block text-gray-700 font-medium mb-2">Discount Price
+                            (Optional)</label>
+                        <input type="number" id="discount_price" name="discount_price" step="0.01"
+                            value="{{ old('discount_price', $product->discount_price) }}"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 @error('discount_price') border-red-500 @enderror">
+                        @error('discount_price')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Is Featured?</label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $product->is_featured) ? 'checked' : '' }}
+                                class="rounded border-gray-300 text-yellow-600 shadow-sm focus:ring-yellow-500">
+                            <span class="ml-2 text-gray-600">Show on homepage</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <button type="submit" class="px-8 py-3 rounded text-gray font-medium btn-gold glow-hover">
+                    Update Product
+                </button>
+            </div>
+        </form>
+    </div>
+@endsection
