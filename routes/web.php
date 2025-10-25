@@ -2,21 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Frontend\HomeController;
-
-//Admin Controllers
 use App\Http\Controllers\Admin\ProductController;
+
+use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DashboardController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::get('/categories', [CategoryController::class, 'index']);
-Route::get('/products', [ProductController::class, 'index']);
-
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/products/{product:slug}', [HomeController::class, 'showProduct'])->name('products.show');
+Route::get('/categories/{category:slug}', [HomeController::class, 'showCategory'])->name('categories.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -24,10 +18,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware([])->prefix('')->name('')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.layouts.dashboard');
-    })->name('dashboard');
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
 });

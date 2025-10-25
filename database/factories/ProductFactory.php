@@ -2,9 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Models\ProductImage;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
@@ -37,5 +39,22 @@ class ProductFactory extends Factory
             'stock' => $faker->numberBetween(0, 50),
             'is_featured' => $faker->boolean(25),
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Product $product) {
+            ProductImage::factory()->create([
+                'product_id' => $product->id,
+                'image_path' => 'https://picsum.photos/seed/' . $product->id . '1/800/800',
+                'is_primary' => true,
+            ]);
+
+            ProductImage::factory()->count(rand(2, 3))->create([
+                'product_id' => $product->id,
+                'image_path' => 'https://picsum.photos/seed/' . $product->id . rand(2, 50) . '/800/800',
+                'is_primary' => false,
+            ]);
+        });
     }
 }
