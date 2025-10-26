@@ -16,7 +16,7 @@
                 <div
                     class="bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl overflow-hidden shadow-lg glow-hover transition p-2">
                     <a href="{{ route('products.show', $product->slug) }}">
-                        <img src="{{ $product->images->isNotEmpty() ? asset('storage/' . $product->images->first()->image_path) : asset('storage/Images/necklace.jpg') }}"
+                        <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('storage/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}"
                             class="w-full h-64 object-cover rounded-xl">
                         <div class="p-5 hero-text">
                             <h4 class="text-xl font-medium text-[#d4af37] truncate">{{ $product->name }}</h4>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tarangini Jewels</title>
-<link rel="icon" type="image/x-icon" href="{{ asset('storage/Images/logo.ico') }}">
+<link rel="icon" type="image/x-icon" href="{{ asset('images/logo.ico') }}">
 <link
     href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap"
     rel="stylesheet">

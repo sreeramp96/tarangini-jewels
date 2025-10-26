@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
 Route::get('/products/{product:slug}', [HomeController::class, 'showProduct'])->name('products.show');
 Route::get('/categories/{category:slug}', [HomeController::class, 'showCategory'])->name('categories.show');
 

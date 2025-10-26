@@ -5,7 +5,6 @@
     <section
         class="flex flex-col lg:flex-row items-center justify-between px-6 lg:px-20 py-16 lg:py-24 bg-[#0b3d2e] relative overflow-hidden hero-text">
         @if($heroProduct && $heroProduct->images->isNotEmpty())
-
             <div class="lg:w-1/2 max-w-xl mb-10 lg:mb-0 z-10">
                 <h2 class="text-4xl lg:text-6xl font-bold hero-text gold-gradient mb-6 leading-tight">
                     {{ $heroProduct->name }}
@@ -13,7 +12,6 @@
                 <p class="text-lg text-gray-200 mb-8 leading-relaxed">
                     {{ Str::limit($heroProduct->description, 150) }}
                 </p>
-                {{-- Link to the actual product's detail page --}}
                 <a href="{{ route('products.show', $heroProduct->slug) }}" class="btn-gold px-6 py-3 rounded font-medium">
                     View Details
                 </a>
@@ -21,7 +19,7 @@
 
             <div class="relative z-10 lg:w-1/2 flex items-center justify-center lg:justify-end">
                 <a href="{{ route('products.show', $heroProduct->slug) }}">
-                    <img src="{{ asset('storage/' . $heroProduct->images->first()->image_path) }}"
+                    <img src="{{ $heroProduct->images->isNotEmpty() ? (Str::startsWith($heroProduct->images->first()->image_path, 'http') ? $heroProduct->images->first()->image_path : asset('storage/' . $heroProduct->images->first()->image_path)) : asset('images/hero.jpg') }}"
                         alt="{{ $heroProduct->name }}"
                         class="rounded-2xl glow-hover shadow-2xl w-full h-auto max-h-[550px] object-contain transition duration-500">
                 </a>
@@ -40,7 +38,7 @@
                 </p>
             </div>
             <div class="relative z-10 lg:w-1/2 flex items-center justify-center lg:justify-end">
-                <img src="{{ asset('storage/Images/hero.jpg') }}" alt="Elegant Jewelry Piece"
+                <img src="{{ asset('images/hero.jpg') }}" alt="Elegant Jewelry Piece"
                     class="rounded-2xl glow-hover shadow-2xl w-full h-auto max-h-[550px] object-contain transition duration-500">
                 <div class="absolute -bottom-8 -right-8 w-32 h-32 bg-[#d4af37]/20 rounded-full blur-3xl"></div>
             </div>
@@ -82,10 +80,10 @@
                         <div
                             class="bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl overflow-hidden shadow-lg glow-hover transition p-2">
                             @if($product->images->isNotEmpty())
-                                <img src="{{ asset('storage/' . $product->images->first()->image_path) }}"
+                                <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('storage/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}"
                                     alt="{{ $product->name }}" class="w-full h-64 object-cover rounded-xl">
                             @else
-                                <img src="{{ asset('storage/Images/necklace.jpg') }}" alt="Placeholder"
+                                <img src="{{ asset('images/necklace.jpg') }}" alt="Placeholder"
                                     class="w-full h-64 object-cover rounded-xl">
                             @endif
 

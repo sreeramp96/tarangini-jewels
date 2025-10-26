@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center w-full px-6 lg:px-20 py-3">
 
         <a href="{{ url('/') }}" class="flex items-center space-x-2 flex-shrink-0">
-            <img src="{{ asset('storage/Images/logo.png') }}" alt="Tarangini Jewels Logo"
+            <img src="{{ asset('images/logo.png') }}" alt="Tarangini Jewels Logo"
                 class="h-10 lg:h-12 w-auto object-contain">
             <span class="text-xl lg:text-3xl font-bold hero-text gold-gradient hidden md:block">
                 Tarangini Jewels

@@ -50,9 +50,15 @@
                             <td class="px-6 py-4">{{ $order->user->name ?? 'Guest' }}</td>
                             <td class="px-6 py-4">
                                 <span class="px-2 py-1 rounded-full text-xs font-medium
-                                                            @if($order->status == 'pending') bg-yellow-600 text-yellow-100 @endif
-                                                            @if($order->status == 'paid') bg-green-600 text-green-100 @endif
-                                                            @if($order->status == 'shipped') bg-blue-600 text-blue-100 @endif">
+                                @if($order->status == 'pending')
+                                    bg-yellow-600 text-yellow-100
+                                @elseif($order->status == 'paid')
+                                    bg-green-600 text-green-100
+                                @elseif($order->status == 'shipped')
+                                    bg-blue-600 text-blue-100
+                                @else
+                                    bg-gray-600 text-gray-100
+                                @endif">
                                     {{ ucfirst($order->status) }}
                                 </span>
                             </td>
