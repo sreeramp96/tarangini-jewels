@@ -24,6 +24,8 @@ RUN composer install --no-dev --optimize-autoloader
 RUN php artisan key:generate
 RUN php artisan storage:link
 
+USER root
+RUN apt-get update && apt-get install -y nodejs npm
 RUN npm install
 RUN npm run build
 # Expose the default Render port
