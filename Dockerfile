@@ -1,64 +1,50 @@
-# STAGE 1: Composer Build Stage
-# Use a dedicated composer image to download dependencies
+# STAGE 1: Composer Build
 FROM composer:2 AS composer_installer
-
-# Set working directory for composer
-WORKDIR /app
-
-# Copy the minimum files required for dependency installation
+WORKDIR /var/www/html
 COPY composer.json composer.lock ./
-
-# CRITICAL FIX: Use --no-scripts to prevent the crashing 'php artisan package:discover'
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
+# STAGE 2: PHP-FPM Runtime
+FROM php:8.4-fpm-bookworm AS app
+WORKDIR /var/www/html
 
-# STAGE 2: Final Runtime Stage (FrankenPHP)
-# Use a stable FrankenPHP image with PHP 8.4 and Alpine
-FROM dunglas/frankenphp:1.4-php8.4-bookworm
-
-# Set the application directory
-WORKDIR /app
-
-# Copy the source code (excluding .gitignore entries)
-COPY . /app
-
-# Copy the vendor directory from the build stage
-COPY --from=composer_installer /app/vendor /app/vendor
-
-COPY .env.example .env
-# Switch to root for installing system dependencies
-USER root
-# Install common database extensions (PostgreSQL and MySQL)
+# Install system dependencies (Debian based)
 RUN apt-get update && apt-get install -y \
+    git \
     libpq-dev \
     libzip-dev \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+    libpng-dev \
+    # Add other required system packages here
 
-RUN docker-php-ext-install pdo_pgsql pdo_mysql opcache
+# Install PHP extensions
+RUN docker-php-ext-install pdo_pgsql pdo_mysql zip opcache gd
 
-# Change file ownership to the application user (www-data is the default in this image)
-RUN chown -R www-data:www-data /app
+# Copy application files and vendor
+COPY . /var/www/html
+COPY --from=composer_installer /var/www/html/vendor /var/www/html/vendor
 
-# Switch back to the non-root user for running commands
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Run Laravel setup
 USER www-data
-
-# Set file permissions (CRUCIAL for Laravel storage, cache, and logs)
-RUN chmod -R 775 storage bootstrap/cache
-
-# Run Laravel production setup commands
-# NOTE: This replaces the failing Composer scripts and optimizes the application
 RUN php artisan key:generate --force
 RUN php artisan migrate --force
-RUN php artisan storage:link
 RUN php artisan optimize --no-interaction
-# RUN php artisan migrate:fresh --seed --force
 
-# Define the web root for FrankenPHP
-ENV SERVER_DOCUMENT_ROOT public
+EXPOSE 9000
+CMD ["php-fpm"]
 
-# Expose the default port (8080 is a common convention for internal services)
+# STAGE 3: Nginx Web Server
+FROM nginx:alpine
+# Copy Nginx config (MUST be in your repo)
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy application files (only public)
+COPY --from=app /var/www/html/public /var/www/html/public
+
+# The nginx service will listen on $PORT
 EXPOSE 8080
-
-# The base image's default command (CMD) will start FrankenPHP automatically,
-# serving the application from the 'public' directory on the exposed port.
+CMD ["nginx", "-g", "daemon off;"]
