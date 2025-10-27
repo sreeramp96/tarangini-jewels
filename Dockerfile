@@ -11,25 +11,21 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set the working directory
 WORKDIR /var/www/html
 
-# Copy project files
-COPY . /var/www/html
+# Copy app files
+COPY . .
 
-# Copy vendor from composer stage
-COPY --from=composer_installer /var/www/html/vendor /var/www/html/vendor
-
-# Create .env before running artisan
 COPY .env.example .env
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 775 storage bootstrap/cache
+# Generate app key and storage link
+RUN php artisan key:generate
+RUN php artisan storage:link
 
-# Laravel setup
-USER www-data
-RUN php artisan key:generate --force
-RUN php artisan migrate --force
-RUN php artisan optimize --no-interaction
+# Expose the default Render port
+EXPOSE 8080
 
+# Start Laravel’s built-in server
+CMD php artisan serve --host=0.0.0.0 --port=8080
