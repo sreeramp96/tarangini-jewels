@@ -1,5 +1,5 @@
 # Use the official FrankenPHP base image with the Alpine distribution
-FROM dunglas/frankenphp:1.1-php8.4-alpine
+FROM dunglas/frankenphp:php8.4
 
 # Set the working directory
 WORKDIR /app
