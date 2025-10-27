@@ -10,11 +10,13 @@ FROM php:8.4-fpm-bookworm AS app_builder
 WORKDIR /var/www/html
 
 # Install Debian system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update \
+    && apt-get install -y \
     git \
     libpq-dev \
     libzip-dev \
-    # ... install other needed system packages
+    # Remove temporary apt lists to keep the image small
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_pgsql pdo_mysql opcache
