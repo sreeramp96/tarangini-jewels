@@ -1,27 +1,23 @@
 services:
   - type: web
     name: tarangini-jewels
-    # THIS IS THE KEY CHANGE TO FIX YOUR ERROR
     runtime: docker
-    # ^^^ This tells Render to ignore the language and use the Dockerfile
-
     plan: free
 
-    # Use preDeployCommand for setup tasks before the container starts
-    preDeployCommand: |
-      # Composer dependencies are typically installed inside the Dockerfile,
-      # but pre-deploy is still good for necessary artisan commands.
-      php artisan key:generate
-      php artisan migrate --force
-      php artisan storage:link
-      # Note: These commands must be runnable in your *Docker* environment.
+    # All setup (composer, migrations, cache) is now in the Dockerfile,
+    # making buildCommand minimal or empty.
+    buildCommand: ""
+    startCommand: "" # Leave empty, the Docker CMD handles the server startup
 
     envVars:
       - key: APP_URL
         value: https://tarangini-jewels.onrender.com
+      - key: PORT
+        value: 8080 # Important: Match the EXPOSE port in your Dockerfile
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
       - key: APP_KEY
-        generateValue: true # Render will generate this for you
+        generateValue: true
+      # ... database variables (DB_CONNECTION, DB_HOST, DB_DATABASE, etc.)
