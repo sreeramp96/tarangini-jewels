@@ -1,4 +1,4 @@
-FROM php:8.3-cli
+FROM php:8.4-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -11,20 +11,25 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Set the working directory
 WORKDIR /var/www/html
 
-# Copy app files
-COPY . .
+# Copy project files
+COPY . /var/www/html
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Copy vendor from composer stage
+COPY --from=composer_installer /var/www/html/vendor /var/www/html/vendor
 
-# Generate app key and storage link
-RUN php artisan key:generate
-RUN php artisan storage:link
+# Create .env before running artisan
+COPY .env.example .env
 
-# Expose the default Render port
-EXPOSE 8080
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 775 storage bootstrap/cache
 
-# Start Laravel’s built-in server
-CMD php artisan serve --host=0.0.0.0 --port=8080
+# Laravel setup
+USER www-data
+RUN php artisan key:generate --force
+RUN php artisan migrate --force
+RUN php artisan optimize --no-interaction
+
