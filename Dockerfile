@@ -23,7 +23,8 @@ RUN composer install --no-dev --optimize-autoloader
 # Generate app key and storage link
 RUN php artisan key:generate
 RUN php artisan storage:link
-
+RUN php artisan migrate
+RUN php artisan db:seed
 USER root
 RUN apt-get update && apt-get install -y nodejs npm
 RUN npm install
