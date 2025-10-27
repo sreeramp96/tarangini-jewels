@@ -14,7 +14,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 
 # STAGE 2: Final Runtime Stage (FrankenPHP)
 # Use a stable FrankenPHP image with PHP 8.4 and Alpine
-FROM dunglas/frankenphp:1.4-php8.4-alpine
+FROM dunglas/frankenphp:1.4-php8.4-bookworm
 
 # Set the application directory
 WORKDIR /app
@@ -29,8 +29,13 @@ COPY .env.example .env
 # Switch to root for installing system dependencies
 USER root
 # Install common database extensions (PostgreSQL and MySQL)
-RUN apk add --no-cache libpq-dev \
-    && docker-php-ext-install pdo_pgsql pdo_mysql opcache
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    libzip-dev \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-install pdo_pgsql pdo_mysql opcache
 
 # Change file ownership to the application user (www-data is the default in this image)
 RUN chown -R www-data:www-data /app
