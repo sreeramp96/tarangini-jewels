@@ -25,6 +25,7 @@ COPY . /app
 # Copy the vendor directory from the build stage
 COPY --from=composer_installer /app/vendor /app/vendor
 
+COPY .env.example .env
 # Switch to root for installing system dependencies
 USER root
 # Install common database extensions (PostgreSQL and MySQL)
