@@ -1,52 +1,57 @@
-# STAGE 1: Build Stage (Used only to install Composer dependencies)
-# Use a dedicated composer image, which is fast and ensures Composer is available.
+# STAGE 1: Composer Build Stage
+# Use a dedicated composer image to download dependencies
 FROM composer:2 AS composer_installer
 
-# Set the working directory for Composer
+# Set working directory for composer
 WORKDIR /app
 
-# Copy the Laravel files needed for Composer
+# Copy the minimum files required for dependency installation
 COPY composer.json composer.lock ./
 
-# Run composer install
-# We use the official composer image, so we don't need to install composer itself.
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# CRITICAL FIX: Use --no-scripts to prevent the crashing 'php artisan package:discover'
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 
-# STAGE 2: Final Runtime Stage (The image that Render will run)
+# STAGE 2: Final Runtime Stage (FrankenPHP)
+# Use a stable FrankenPHP image with PHP 8.4 and Alpine
 FROM dunglas/frankenphp:1.4-php8.4-alpine
 
-# Set the working directory
+# Set the application directory
 WORKDIR /app
 
-# Copy application code
+# Copy the source code (excluding .gitignore entries)
 COPY . /app
 
-# Copy the vendor directory from the composer_installer stage
+# Copy the vendor directory from the build stage
 COPY --from=composer_installer /app/vendor /app/vendor
 
-# Set permissions and ownership
-# Switch to root for permission commands
+# Switch to root for installing system dependencies
 USER root
-# Ensure system dependencies for DB connection are present (if needed)
+# Install common database extensions (PostgreSQL and MySQL)
 RUN apk add --no-cache libpq-dev \
     && docker-php-ext-install pdo_pgsql pdo_mysql opcache
-# Change ownership to the non-root user (www-data)
+
+# Change file ownership to the application user (www-data is the default in this image)
 RUN chown -R www-data:www-data /app
 
-# Switch back to the non-root user
+# Switch back to the non-root user for running commands
 USER www-data
 
-# Set permissions for Laravel (must run as the user that will run the app)
+# Set file permissions (CRUCIAL for Laravel storage, cache, and logs)
 RUN chmod -R 775 storage bootstrap/cache
 
-# Run Laravel production optimization steps during the build (now that PHP is running)
-# We can run these because the final image contains the php binary.
+# Run Laravel production setup commands
+# NOTE: This replaces the failing Composer scripts and optimizes the application
 RUN php artisan key:generate --force
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
+RUN php artisan migrate --force
+RUN php artisan storage:link
+RUN php artisan optimize --no-interaction
 
-# Define the web root and port
+# Define the web root for FrankenPHP
 ENV SERVER_DOCUMENT_ROOT public
+
+# Expose the default port (8080 is a common convention for internal services)
 EXPOSE 8080
+
+# The base image's default command (CMD) will start FrankenPHP automatically,
+# serving the application from the 'public' directory on the exposed port.

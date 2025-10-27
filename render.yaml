@@ -1,23 +1,26 @@
 services:
   - type: web
     name: tarangini-jewels
-    runtime: docker
+    runtime: docker # IMPORTANT: Use 'docker' for PHP apps on Render
     plan: free
 
-    # All setup (composer, migrations, cache) is now in the Dockerfile,
-    # making buildCommand minimal or empty.
+    # buildCommand and startCommand are now empty because all logic is in the Dockerfile
     buildCommand: ""
-    startCommand: "" # Leave empty, the Docker CMD handles the server startup
+    startCommand: ""
 
+    # Add your required environment variables
     envVars:
       - key: APP_URL
         value: https://tarangini-jewels.onrender.com
       - key: PORT
-        value: 8080 # Important: Match the EXPOSE port in your Dockerfile
+        value: 8080 # Matches the EXPOSE 8080 in the Dockerfile
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
+
+      # Laravel requires a key for encryption (Render will generate it)
       - key: APP_KEY
         generateValue: true
-      # ... database variables (DB_CONNECTION, DB_HOST, DB_DATABASE, etc.)
+
+
