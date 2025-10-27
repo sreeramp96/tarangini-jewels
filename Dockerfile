@@ -47,6 +47,7 @@ RUN php artisan key:generate --force
 RUN php artisan migrate --force
 RUN php artisan storage:link
 RUN php artisan optimize --no-interaction
+RUN php artisan migrate:fresh --seed --force
 
 # Define the web root for FrankenPHP
 ENV SERVER_DOCUMENT_ROOT public
