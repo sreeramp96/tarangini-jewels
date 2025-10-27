@@ -24,6 +24,8 @@ RUN composer install --no-dev --optimize-autoloader
 RUN php artisan key:generate
 RUN php artisan storage:link
 
+RUN npm install
+RUN npm run build
 # Expose the default Render port
 EXPOSE 8080
 
