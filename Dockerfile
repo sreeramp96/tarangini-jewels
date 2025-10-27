@@ -18,7 +18,7 @@ COPY . .
 
 COPY .env.example .env
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --optimize-autoloader
 
 # Generate app key and storage link
 RUN php artisan key:generate
