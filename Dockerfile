@@ -1,42 +1,52 @@
-# Use the official FrankenPHP base image with the Alpine distribution
-FROM dunglas/frankenphp:php8.4
+# STAGE 1: Build Stage (Used only to install Composer dependencies)
+# Use a dedicated composer image, which is fast and ensures Composer is available.
+FROM composer:2 AS composer_installer
+
+# Set the working directory for Composer
+WORKDIR /app
+
+# Copy the Laravel files needed for Composer
+COPY composer.json composer.lock ./
+
+# Run composer install
+# We use the official composer image, so we don't need to install composer itself.
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+
+# STAGE 2: Final Runtime Stage (The image that Render will run)
+FROM dunglas/frankenphp:1.4-php8.4-alpine
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the entire Laravel application into the container
+# Copy application code
 COPY . /app
 
-# 1. Install Composer dependencies
-# Use the non-root user (www-data) for security
+# Copy the vendor directory from the composer_installer stage
+COPY --from=composer_installer /app/vendor /app/vendor
+
+# Set permissions and ownership
+# Switch to root for permission commands
+USER root
+# Ensure system dependencies for DB connection are present (if needed)
+RUN apk add --no-cache libpq-dev \
+    && docker-php-ext-install pdo_pgsql pdo_mysql opcache
+# Change ownership to the non-root user (www-data)
+RUN chown -R www-data:www-data /app
+
+# Switch back to the non-root user
 USER www-data
-RUN composer install --no-dev --optimize-autoloader
 
-# 2. Install necessary PHP extensions (pdo_mysql is common for Laravel)
-# Note: FrankenPHP images often come with many common extensions pre-installed.
-# Check documentation for the specific image, but here's how to install if needed:
-# USER root
-# RUN apk add --no-cache libpq-dev \
-#     && docker-php-ext-install pdo_pgsql pdo_mysql opcache
-# USER www-data
-
-# 3. Set permissions for Laravel
-# Crucial for writing logs, cache, and session data
+# Set permissions for Laravel (must run as the user that will run the app)
 RUN chmod -R 775 storage bootstrap/cache
 
-# 4. Run Laravel production optimization steps during the build
+# Run Laravel production optimization steps during the build (now that PHP is running)
+# We can run these because the final image contains the php binary.
 RUN php artisan key:generate --force
 RUN php artisan config:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
 
-# 5. Define the web root for the application
-ENV APP_RUN_ENV=prod
+# Define the web root and port
 ENV SERVER_DOCUMENT_ROOT public
-
-# Expose the default FrankenPHP port (usually 80 or 443 internally)
-# We set this to 8080 as a common standard, Render will map its $PORT to this.
 EXPOSE 8080
-
-# The default CMD of the FrankenPHP image will automatically start the server
-# pointing to the document root defined above. No need for a startCommand in render.yaml!
