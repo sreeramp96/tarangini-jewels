@@ -1,51 +1,30 @@
-# STAGE 1: Composer Build
-FROM composer:2 AS composer_installer
-WORKDIR /var/www/html
-COPY composer.json composer.lock ./
-# Prevents the crashing 'php artisan package:discover'
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+FROM php:8.3-cli
 
-# STAGE 2: Final Image (PHP-FPM + Nginx)
-FROM php:8.4-fpm-bookworm
-
-# Install Nginx and other system dependencies
-USER root
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    nginx \
     git \
+    unzip \
     libpq-dev \
     libzip-dev \
-    # Clean up APT lists to reduce image size
-    && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install pdo_mysql pdo_pgsql zip
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_pgsql pdo_mysql opcache
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set the working directory
 WORKDIR /var/www/html
 
-# Copy application files and vendor
-COPY . /var/www/html
-COPY --from=composer_installer /var/www/html/vendor /var/www/html/vendor
-COPY .env.example .env # Placeholder for key:generate
+# Copy app files
+COPY . .
 
-# Copy Nginx Configuration
-# NOTE: This assumes you have 'docker/nginx.conf' in your repo root.
-COPY docker/nginx.conf /etc/nginx/sites-enabled/default
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# Set proper permissions
-RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 775 storage bootstrap/cache
+# Generate app key and storage link
+RUN php artisan key:generate
+RUN php artisan storage:link
 
-# Run Laravel setup commands
-USER www-data
-RUN php artisan key:generate --force
-RUN php artisan migrate --force
-RUN php artisan optimize --no-interaction
-
-# Start both PHP-FPM and Nginx with a custom script
-# You must create this file in your repository root.
-COPY start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
+# Expose the default Render port
 EXPOSE 8080
-ENTRYPOINT ["/usr/local/bin/start.sh"]
+
+# Start Laravel’s built-in server
+CMD php artisan serve --host=0.0.0.0 --port=8080
