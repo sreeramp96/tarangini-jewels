@@ -1,12 +1,11 @@
 services:
   - type: web
     name: tarangini-jewels
-    runtime: docker # IMPORTANT: Use 'docker' for PHP apps on Render
+    runtime: docker
     plan: free
 
-    # buildCommand and startCommand are now empty because all logic is in the Dockerfile
-    buildCommand: ""
-    startCommand: ""
+    # Set the entrypoint to your custom start script
+    startCommand: ./start.sh
 
     # Add your required environment variables
     envVars:
