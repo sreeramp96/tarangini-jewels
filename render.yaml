@@ -1,35 +1,24 @@
 services:
   - type: web
     name: tarangini-jewels
-    env: php # Correct field is 'env', and the value 'php' is standard.
+    # THIS IS THE KEY CHANGE TO FIX YOUR ERROR
+    runtime: docker
+    # ^^^ This tells Render to ignore the language and use the Dockerfile
+
     plan: free
-    buildCommand: |
-      # 1. Install PHP dependencies
-      composer install --no-dev --optimize-autoloader
-      # 2. Compile frontend assets (if you use Vite/Mix)
-      npm install
-      npm run build
-      # 3. Create necessary directories and set permissions
-      mkdir -p bootstrap/cache
-      chmod -R 775 storage bootstrap/cache
-    startCommand: |
-      # 1. Run production-specific Laravel commands
+
+    # Use preDeployCommand for setup tasks before the container starts
+    preDeployCommand: |
+      # Composer dependencies are typically installed inside the Dockerfile,
+      # but pre-deploy is still good for necessary artisan commands.
       php artisan key:generate
       php artisan migrate --force
       php artisan storage:link
-      php artisan config:cache
-      php artisan route:cache
-      php artisan view:cache
-      # 2. Start the production web server (e.g., FrankenPHP, or a simple server for testing)
-      # Note: Render often handles the Nginx/PHP-FPM setup internally for the 'php' env.
-      # If your build fails, you might need to use a single-command server like below:
-      php -S 0.0.0.0:$PORT -t public/
-      # A better production setup often involves a custom Dockerfile with Nginx/PHP-FPM.
+      # Note: These commands must be runnable in your *Docker* environment.
+
     envVars:
-      # Required for Laravel to know its domain
       - key: APP_URL
         value: https://tarangini-jewels.onrender.com
-      # Standard production settings
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
