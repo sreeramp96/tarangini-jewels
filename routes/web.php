@@ -23,6 +23,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
+    Route::get('products/import', [ProductController::class, 'showImportForm'])->name('products.import.form');
+    Route::post('products/import', [ProductController::class, 'handleImport'])->name('products.import.handle');
 });
 
 require __DIR__ . '/auth.php';

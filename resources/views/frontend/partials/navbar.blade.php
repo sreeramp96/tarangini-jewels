@@ -100,10 +100,6 @@
                 <x-heroicon-o-star class="w-6 h-6 mb-1" />
                 <span>Earrings</span>
             </a>
-            <a href="#" class_="{{ $navLinkClasses }}">
-                <x-heroicon-o-link class="w-6 h-6 mb-1" />
-                <span>Necklaces</span>
-            </a>
             <a href="#about" class="{{ $navLinkClasses }}">
                 <x-heroicon-o-information-circle class="w-6 h-6 mb-1" />
                 <span>About</span>

@@ -2,108 +2,151 @@
 
 @section('content')
 
-    <section
-        class="flex flex-col lg:flex-row items-center justify-between px-6 lg:px-20 py-16 lg:py-24 bg-[#0b3d2e] relative overflow-hidden hero-text">
-        @if($heroProduct && $heroProduct->images->isNotEmpty())
-            <div class="lg:w-1/2 max-w-xl mb-10 lg:mb-0 z-10">
-                <h2 class="text-4xl lg:text-6xl font-bold hero-text gold-gradient mb-6 leading-tight">
-                    {{ $heroProduct->name }}
-                </h2>
-                <p class="text-lg text-gray-200 mb-8 leading-relaxed">
-                    {{ Str::limit($heroProduct->description, 150) }}
-                </p>
-                <a href="{{ route('products.show', $heroProduct->slug) }}" class="btn-gold px-6 py-3 rounded font-medium">
-                    View Details
-                </a>
-            </div>
+<section
+    class="relative flex items-center justify-start px-6 lg:px-20 min-h-[70vh] lg:min-h-[80vh] overflow-hidden">
+    {{-- Made section relative, removed flex direction, added min-height --}}
 
-            <div class="relative z-10 lg:w-1/2 flex items-center justify-center lg:justify-end">
-                <a href="{{ route('products.show', $heroProduct->slug) }}">
-                    <img src="{{ $heroProduct->images->isNotEmpty() ? (Str::startsWith($heroProduct->images->first()->image_path, 'http') ? $heroProduct->images->first()->image_path : asset('storage/' . $heroProduct->images->first()->image_path)) : asset('images/hero.jpg') }}"
-                        alt="{{ $heroProduct->name }}"
-                        class="rounded-2xl glow-hover shadow-2xl w-full h-auto max-h-[550px] object-contain transition duration-500">
-                </a>
-                <div class="absolute -bottom-8 -right-8 w-32 h-32 bg-[#d4af37]/20 rounded-full blur-3xl"></div>
-            </div>
+    <div class="absolute inset-0 z-0" {{-- Made carousel absolute background --}}
+         x-data="{
+             activeSlide: 0,
+             slides: {{ $heroCarouselProducts->count() }},
+             autoplay: null,
+             startAutoplay() {
+                this.autoplay = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slides }, 5000)
+             },
+             stopAutoplay() { clearInterval(this.autoplay) }
+         }"
+         x-init="startAutoplay()">
 
-        @else
-            <div class="lg:w-1/2 max-w-xl mb-10 lg:mb-0 z-10">
-                <h2 class="text-4xl lg:text-6xl font-bold hero-text gold-gradient mb-6">
-                    Elegance Redefined<br>in Every Jewel
-                </h2>
-                <p class="text-lg text-gray-200 mb-8 leading-relaxed">
-                    Discover handcrafted luxury with a touch of divine grace. Every piece at <span
-                        class="text-[#d4af37]">Tarangini</span>
-                    embodies timeless beauty and artistry.
-                </p>
-            </div>
-            <div class="relative z-10 lg:w-1/2 flex items-center justify-center lg:justify-end">
-                <img src="{{ asset('images/hero.jpg') }}" alt="Elegant Jewelry Piece"
-                    class="rounded-2xl glow-hover shadow-2xl w-full h-auto max-h-[550px] object-contain transition duration-500">
-                <div class="absolute -bottom-8 -right-8 w-32 h-32 bg-[#d4af37]/20 rounded-full blur-3xl"></div>
-            </div>
-        @endif
+        {{-- Carousel Container --}}
+        <div class="relative w-full h-full">
+            {{-- Loop through carousel products --}}
+            @foreach($heroCarouselProducts as $index => $heroProduct)
+                <div
+                    x-show="activeSlide === {{ $index }}"
+                    class="absolute inset-0 transition-opacity duration-1000 ease-in-out" {{-- Slower transition --}}
+                    x-transition:enter="opacity-0"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="opacity-100"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    style="display: none;"> {{-- Hide initially to prevent flash --}}
 
-        <div class="absolute top-10 left-10 w-4 h-4 bg-[#d4af37]/40 rounded-full blur-sm animate-pulse"></div>
-        <div class="absolute bottom-20 right-16 w-6 h-6 bg-[#d4af37]/40 rounded-full blur-md animate-ping"></div>
-    </section>
+                    <img src="{{ Str::startsWith($heroProduct->images->first()->image_path, 'http') ? $heroProduct->images->first()->image_path : asset('storage/' . $heroProduct->images->first()->image_path) }}"
+                         alt="{{ $heroProduct->name }}"
+                         class="w-full h-full object-cover">
+                    {{-- Added dark overlay directly on image container for readability --}}
+                    <div class="absolute inset-0 bg-black/40"></div>
+                </div>
+            @endforeach
+        </div>
 
-    <section id="categories" class="bg-[#0d4837] px-6 lg:px-20 py-20">
-        <h3 class="text-3xl lg:text-4xl font-semibold text-center gold-gradient mb-12 hero-text">
+        {{-- Removed carousel controls (prev/next/dots) for background style --}}
+    </div>
+
+    <div class="relative z-10 lg:w-1/2 max-w-xl text-white"> {{-- Added text-white --}}
+        <h2 class="text-4xl lg:text-6xl font-bold hero-text gold-gradient mb-6 leading-tight">
+            Elegance Redefined<br>in Every Jewel
+        </h2>
+        <p class="text-lg text-gray-200 mb-8 leading-relaxed"> {{-- Adjusted text color --}}
+            Discover handcrafted luxury with a touch of divine grace. Every piece at <span
+                class="text-brand-gold font-semibold">Tarangini</span>
+            embodies timeless beauty and artistry.
+        </p>
+        <a href="#featured-products" class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block">Explore Collection</a>
+    </div>
+
+</section>
+
+    <section id="categories" class="bg-gray-100 px-6 lg:px-20 py-20">
+        <h3 class="text-3xl lg:text-4xl font-semibold text-center text-gray-800 mb-12 hero-text">
             Shop by Category
         </h3>
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
             @foreach($categories as $category)
-                <a href="{{ route('categories.show', $category->slug) }}" class="text-center group">
+                <a href="{{ route('categories.show', $category->slug) }}" class="group">
+                    {{-- Card Styling --}}
                     <div
-                        class="w-full h-32 md:h-40 bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl flex items-center justify-center p-4 glow-hover transition">
-                        <x-heroicon-o-sparkles class="w-16 h-16 text-[#d4af37] group-hover:scale-110 transition-transform" />
+                        class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out group-hover:shadow-xl">
+                        {{-- Placeholder for Category Image --}}
+                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                            <x-heroicon-o-sparkles class="w-16 h-16 text-gray-400" />
+                        </div>
+                        <div class="p-4 text-center">
+                            <h4 class="text-lg font-medium text-gray-800 group-hover:text-brand-gold transition hero-text">
+                                {{ $category->name }}
+                            </h4>
+                            <span class="text-sm text-gray-500 group-hover:text-brand-gold transition">Explore All</span>
+                        </div>
                     </div>
-                    <h4 class="mt-4 text-lg font-medium text-gray-200 group-hover:text-[#d4af37] transition hero-text">
-                        {{ $category->name }}
-                    </h4>
                 </a>
             @endforeach
         </div>
     </section>
 
-
-    <section id="featured-products" class="bg-[#0b3d2e] px-6 lg:px-20 py-20">
-        <h3 class="text-3xl lg:text-4xl font-semibold text-center gold-gradient mb-12 hero-text">
-            Our Signature Collection
+    {{-- Changed background to white --}}
+    <section id="featured-products" class="bg-white px-6 lg:px-20 py-20">
+        <h3 class="text-3xl lg:text-4xl font-semibold text-center text-gray-800 mb-12 hero-text">
+            New Arrivals
         </h3>
-
-        <div class="flex space-x-8 overflow-x-auto pb-6">
+        {{-- Use a grid instead of carousel for this style --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             @forelse($featuredProducts as $product)
-                <div class="flex-shrink-0 w-80">
+                {{-- Product Card --}}
+                <div class="bg-white rounded-lg shadow overflow-hidden group relative">
                     <a href="{{ route('products.show', $product->slug) }}" class="block">
-                        <div
-                            class="bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl overflow-hidden shadow-lg glow-hover transition p-2">
-                            @if($product->images->isNotEmpty())
-                                <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('storage/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}"
-                                    alt="{{ $product->name }}" class="w-full h-64 object-cover rounded-xl">
-                            @else
-                                <img src="{{ asset('images/necklace.jpg') }}" alt="Placeholder"
-                                    class="w-full h-64 object-cover rounded-xl">
-                            @endif
+                        {{-- Image Container --}}
+                        <div class="relative overflow-hidden">
+                            <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('storage/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}"
+                                alt="{{ $product->name }}"
+                                class="w-full h-72 object-cover transition duration-500 ease-in-out group-hover:scale-105">
 
-                            <div class="p-5 hero-text">
-                                <h4 class="text-xl font-medium text-[#d4af37] truncate">{{ $product->name }}</h4>
-                                <p class="text-gray-300 text-sm mt-2">
-                                    @if($product->discount_price)
-                                        <span class="line-through text-gray-500">₹{{ number_format($product->price, 2) }}</span>
-                                        <span
-                                            class="font-bold text-lg text-white ml-2">₹{{ number_format($product->discount_price, 2) }}</span>
-                                    @else
-                                        <span class="font-bold text-lg text-white">₹{{ number_format($product->price, 2) }}</span>
-                                    @endif
-                                </p>
+                            {{-- Badges --}}
+                            <div class="absolute top-2 left-2 flex flex-col space-y-1">
+                                {{-- Discount Badge --}}
+                                @if($product->discount_price && $product->price > 0)
+                                    @php
+                                        $discountPercent = round((($product->price - $product->discount_price) / $product->price) * 100);
+                                     @endphp
+                                    <span
+                                        class="bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">{{ $discountPercent }}%
+                                        OFF</span>
+                                @endif
+                                {{-- Out of Stock Badge --}}
+                                @if($product->stock <= 0)
+                                    <span class="bg-gray-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full">Out of
+                                        stock</span>
+                                @endif
                             </div>
+
+                            {{-- Wishlist Heart --}}
+                            <button
+                                class="absolute top-2 right-2 bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition">
+                                <x-heroicon-o-heart class="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        {{-- Product Info --}}
+                        <div class="p-4 text-center">
+                            <h4 class="text-md font-medium text-gray-800 truncate hero-text">{{ $product->name }}</h4>
+                            {{-- Price --}}
+                            <p class="text-gray-600 text-sm mt-1">
+                                @if($product->discount_price)
+                                    <span class="line-through text-gray-400">₹{{ number_format($product->price, 0) }}</span>
+                                    <span
+                                        class="font-semibold text-gray-800 ml-1">₹{{ number_format($product->discount_price, 0) }}</span>
+                                @else
+                                    <span class="font-semibold text-gray-800">₹{{ number_format($product->price, 0) }}</span>
+                                @endif
+                            </p>
+                            {{-- Add to Cart Button (optional on homepage) --}}
+                            {{-- <button class="mt-3 w-full btn-dark px-4 py-2 text-sm rounded">Add to Cart</button> --}}
                         </div>
                     </a>
                 </div>
             @empty
-                <p class="text-lg text-gray-400 text-center w-full">No featured products available at this time.</p>
+                <p class="text-lg text-gray-500 col-span-full text-center">No featured products available.</p>
             @endforelse
         </div>
     </section>

@@ -7,7 +7,10 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use App\Imports\ProductsImport;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -15,10 +18,33 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->latest()->get();
-        return view('admin.products.index', compact('products'));
+        $query = Product::with('category', 'images'); // Load relationships
+
+        // 1. Filter by search term (if provided)
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            // Search in product name or description
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('description', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        // 2. Filter by category (if provided)
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
+
+        // 3. Order and Paginate the results
+        $products = $query->latest()->paginate(12);
+
+        // Fetch categories for the dropdown (no change here)
+        $categories = Category::orderBy('name')->get();
+
+        // Pass results and categories to the view
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
     /**
@@ -66,7 +92,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('products.index')->with('success', 'Product created successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -139,7 +165,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -148,6 +174,39 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+    }
+
+    public function showImportForm()
+    {
+        // For simplicity, let's reuse the create view logic,
+        // but you might want a simpler dedicated import view later.
+        $categories = Category::all();
+        return view('admin.products.create', compact('categories'));
+    }
+
+    /**
+     * Handle the import file upload.
+     */
+    public function handleImport(Request $request)
+    {
+        $request->validate([
+            'import_file' => 'required|file|mimes:csv,xlsx,xls', // Validate file type
+        ]);
+
+        try {
+            Excel::import(new ProductsImport, $request->file('import_file'));
+            return redirect()->route('admin.products.index')->with('success', 'Products imported successfully!');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+            // Handle validation failures (e.g., return back with errors)
+            Log::error('Import Validation Failed: ', $failures);
+            return back()->withErrors(['import_file' => 'Import failed. Check logs for details.']); // Generic error
+
+        } catch (\Exception $e) {
+            // Handle other potential errors during import
+            Log::error('Product Import Failed: ' . $e->getMessage());
+            return back()->withErrors(['import_file' => 'An error occurred during import. Please check the file format and data.']);
+        }
     }
 }

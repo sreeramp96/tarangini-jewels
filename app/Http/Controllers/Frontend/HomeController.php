@@ -19,12 +19,15 @@ class HomeController extends Controller
 
         $categories = Category::all();
 
-        $heroProduct = $featuredProducts->first();
+        $heroCarouselProducts = $featuredProducts->filter(function ($product) {
+            return $product->images->isNotEmpty();
+        })->take(4);
+        // ---------------------------------------------
 
         return view('frontend.home', compact(
             'featuredProducts',
             'categories',
-            'heroProduct'
+            'heroCarouselProducts'
         ));
     }
 

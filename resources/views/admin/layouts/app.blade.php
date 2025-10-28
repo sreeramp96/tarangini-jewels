@@ -15,14 +15,13 @@
 
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Newsreader', sans-serif;
             background-color: #0b3d2e;
             color: #f8f8f5;
             scroll-behavior: smooth;
         }
 
         .hero-text {
-            /* font-family: 'Playfair Display', serif; */
             font-family: "Newsreader", serif;
             font-optical-sizing: auto;
             font-weight: <weight>;
