@@ -4,11 +4,11 @@
 @section('content')
     <main class="bg-[#0b3d2e] text-gray-200 py-16 px-6 lg:px-20">
         <div x-data="{primaryImage: '{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('images/products/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}',
-                images: [
-                    @foreach($product->images as $image)
-                        '{{ Str::startsWith($image->image_path, 'http') ? $image->image_path : asset('images/products/' . $image->image_path) }}',
-                    @endforeach
-                ]}">
+                    images: [
+                        @foreach($product->images as $image)
+                            '{{ Str::startsWith($image->image_path, 'http') ? $image->image_path : asset('images/products/' . $image->image_path) }}',
+                        @endforeach
+                    ]}">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
                 <div>
                     <div class="border border-[#d4af37]/40 rounded-2xl p-2 mb-4">
@@ -49,12 +49,34 @@
                     </p>
 
                     <div class="flex items-center space-x-4">
-                        <button class="flex-grow btn-gold px-8 py-4 rounded font-medium text-lg">
-                            Add to Cart
-                        </button>
-                        <button class="p-4 border border-[#d4af37]/40 rounded glow-hover">
-                            <x-heroicon-o-heart class="w-6 h-6 text-[#d4af37]" />
-                        </button>
+                        <form action="{{ route('cart.store', $product->id) }}" method="POST" class="mt-8">
+                            @csrf
+                            <div class="flex items-center space-x-4">
+                                {{-- Quantity Input (Optional but good) --}}
+                                <div class="w-24">
+                                    <label for="quantity" class="sr-only">Quantity</label>
+                                    <input type="number" id="quantity" name="quantity" value="1" min="1"
+                                        max="{{ $product->stock }}"
+                                        class="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-gold focus:border-brand-gold text-gray-800 text-center">
+                                </div>
+
+                                {{-- Add to Cart Button --}}
+                                <button type="submit" class="flex-grow btn-gold px-8 py-4 rounded font-semibold text-lg"
+                                    {{-- Disable button if out of stock --}} @if($product->stock <= 0) disabled @endif>
+                                    {{ $product->stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
+                                </button>
+
+                                {{-- Wishlist Button --}}
+                                <button type="button" class="p-4 border border-[#d4af37]/40 rounded glow-hover">
+                                    <x-heroicon-o-heart class="w-6 h-6 text-[#d4af37]" />
+                                </button>
+                            </div>
+                            @if($product->stock <= 0)
+                                <p class="text-red-500 text-sm mt-2">This product is currently out of stock.</p>
+                            @elseif($product->stock < 10) {{-- Optional: Show low stock warning --}}
+                                <p class="text-yellow-500 text-sm mt-2">Only {{ $product->stock }} left in stock!</p>
+                            @endif
+                        </form>
                     </div>
                 </div>
             </div>

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
+use App\Models\CartItem;
 use Illuminate\View\View;
-
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Support\Facades\Session;
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -30,6 +32,8 @@ class AuthenticatedSessionController extends Controller
 
         $user = $request->user();
 
+        $this->mergeSessionCartIntoDatabase($user);
+
         if ($user->is_admin) {
             return redirect()->route('admin.dashboard');
         }
@@ -49,5 +53,38 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    protected function mergeSessionCartIntoDatabase($user)
+    {
+        $sessionCart = Session::get('cart', []);
+        if (empty($sessionCart)) return;
+
+        foreach ($sessionCart as $productId => $item) {
+            $quantity = $item['quantity'];
+            $product = Product::find($productId);
+            if (!$product) continue;
+
+            // Check if item exists for this user
+            $dbItem = CartItem::where('user_id', $user->id) // Query by user_id
+                              ->where('product_id', $productId)
+                              ->first();
+
+            if ($dbItem) {
+                // Update quantity logic...
+                 $newQuantity = min($dbItem->quantity + $quantity, $product->stock);
+                 $dbItem->quantity = $newQuantity;
+                 $dbItem->save();
+            } else {
+                // Create new item linked directly to user
+                 CartItem::create([
+                    'user_id'    => $user->id, // Use user_id
+                    'product_id' => $productId,
+                    'quantity'   => min($quantity, $product->stock),
+                ]);
+            }
+        }
+
+        Session::forget('cart');
     }
 }

@@ -4,9 +4,7 @@
 
 <section
     class="relative flex items-center justify-start px-6 lg:px-20 min-h-[70vh] lg:min-h-[80vh] overflow-hidden">
-    {{-- Made section relative, removed flex direction, added min-height --}}
-
-    <div class="absolute inset-0 z-0" {{-- Made carousel absolute background --}}
+    <div class="absolute inset-0 z-0"
          x-data="{
              activeSlide: 0,
              slides: {{ $heroCarouselProducts->count() }},
@@ -60,10 +58,8 @@
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
             @foreach($categories as $category)
                 <a href="{{ route('categories.show', $category->slug) }}" class="group">
-                    {{-- Card Styling --}}
                     <div
                         class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out group-hover:shadow-xl">
-                        {{-- Placeholder for Category Image --}}
                         <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
                             <x-heroicon-o-sparkles class="w-16 h-16 text-gray-400" />
                         </div>
@@ -79,26 +75,20 @@
         </div>
     </section>
 
-    {{-- Changed background to white --}}
     <section id="featured-products" class="bg-white px-6 lg:px-20 py-20">
         <h3 class="text-3xl lg:text-4xl font-semibold text-center text-gray-800 mb-12 hero-text">
             New Arrivals
         </h3>
-        {{-- Use a grid instead of carousel for this style --}}
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             @forelse($featuredProducts as $product)
-                {{-- Product Card --}}
                 <div class="bg-white rounded-lg shadow overflow-hidden group relative">
                     <a href="{{ route('products.show', $product->slug) }}" class="block">
-                        {{-- Image Container --}}
                         <div class="relative overflow-hidden">
                             <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('images/products/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}"
                                 alt="{{ $product->name }}"
                                 class="w-full h-72 object-cover transition duration-500 ease-in-out group-hover:scale-105">
-
-                            {{-- Badges --}}
                             <div class="absolute top-2 left-2 flex flex-col space-y-1">
-                                {{-- Discount Badge --}}
                                 @if($product->discount_price && $product->price > 0)
                                     @php
                                         $discountPercent = round((($product->price - $product->discount_price) / $product->price) * 100);
@@ -107,24 +97,20 @@
                                         class="bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">{{ $discountPercent }}%
                                         OFF</span>
                                 @endif
-                                {{-- Out of Stock Badge --}}
                                 @if($product->stock <= 0)
                                     <span class="bg-gray-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full">Out of
                                         stock</span>
                                 @endif
                             </div>
 
-                            {{-- Wishlist Heart --}}
                             <button
                                 class="absolute top-2 right-2 bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition">
                                 <x-heroicon-o-heart class="w-5 h-5" />
                             </button>
                         </div>
 
-                        {{-- Product Info --}}
                         <div class="p-4 text-center">
                             <h4 class="text-md font-medium text-gray-800 truncate hero-text">{{ $product->name }}</h4>
-                            {{-- Price --}}
                             <p class="text-gray-600 text-sm mt-1">
                                 @if($product->discount_price)
                                     <span class="line-through text-gray-400">₹{{ number_format($product->price, 0) }}</span>
@@ -134,8 +120,7 @@
                                     <span class="font-semibold text-gray-800">₹{{ number_format($product->price, 0) }}</span>
                                 @endif
                             </p>
-                            {{-- Add to Cart Button (optional on homepage) --}}
-                            {{-- <button class="mt-3 w-full btn-dark px-4 py-2 text-sm rounded">Add to Cart</button> --}}
+                            <button class="mt-3 w-full btn-dark px-4 py-2 text-sm rounded btn-gold glow-hover">Add to Cart</button>
                         </div>
                     </a>
                 </div>
