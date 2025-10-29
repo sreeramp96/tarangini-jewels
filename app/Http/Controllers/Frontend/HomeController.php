@@ -22,7 +22,6 @@ class HomeController extends Controller
         $heroCarouselProducts = $featuredProducts->filter(function ($product) {
             return $product->images->isNotEmpty();
         })->take(4);
-        // ---------------------------------------------
 
         return view('frontend.home', compact(
             'featuredProducts',

@@ -20,30 +20,23 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with('category', 'images'); // Load relationships
+        $query = Product::with('category', 'images');
 
-        // 1. Filter by search term (if provided)
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
-            // Search in product name or description
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'LIKE', "%{$searchTerm}%")
                     ->orWhere('description', 'LIKE', "%{$searchTerm}%");
             });
         }
 
-        // 2. Filter by category (if provided)
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->input('category_id'));
         }
 
-        // 3. Order and Paginate the results
         $products = $query->latest()->paginate(12);
-
-        // Fetch categories for the dropdown (no change here)
         $categories = Category::orderBy('name')->get();
 
-        // Pass results and categories to the view
         return view('admin.products.index', compact('products', 'categories'));
     }
 
@@ -121,47 +114,35 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            // ... (other rules) ...
             'is_featured' => 'nullable|boolean',
-
-            // --- ADD VALIDATION FOR NEW FIELDS ---
-            'images' => 'nullable|array', // For new uploads
+            'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,webp',
-            'delete_images' => 'nullable|array', // For deletions
-            'delete_images.*' => 'integer|exists:product_images,id' // Must be valid image IDs
+            'delete_images' => 'nullable|array',
+            'delete_images.*' => 'integer|exists:product_images,id'
         ]);
 
-        // ... (Handle slug and 'is_featured' checkbox) ...
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_featured'] = $request->has('is_featured');
 
         $product->update($validated);
 
-        // --- NEW LOGIC FOR HANDLING IMAGES ---
-
-        // 1. Delete selected images
         if ($request->has('delete_images')) {
             $imagesToDelete = ProductImage::whereIn('id', $request->delete_images)->get();
             foreach ($imagesToDelete as $image) {
-                // Delete the file from storage
                 Storage::disk('public')->delete($image->image_path);
-                // Delete the record from the database
                 $image->delete();
             }
         }
 
-        // 2. Add any new images
         if ($request->hasFile('images')) {
-            // Re-check if a primary image exists after potential deletions
             $hasPrimary = $product->images()->where('is_primary', true)->exists();
-
             foreach ($request->file('images') as $imageFile) {
                 $path = $imageFile->store('products', 'public');
                 $product->images()->create([
                     'image_path' => $path,
-                    'is_primary' => !$hasPrimary, // Only set as primary if one doesn't exist
+                    'is_primary' => !$hasPrimary,
                 ]);
-                $hasPrimary = true; // Ensure only the first new image is set as primary
+                $hasPrimary = true;
             }
         }
 

@@ -3,10 +3,10 @@
 {{-- Use Alpine.js for a simple image gallery --}}
 @section('content')
     <main class="bg-[#0b3d2e] text-gray-200 py-16 px-6 lg:px-20">
-        <div x-data="{primaryImage: '{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('storage/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}',
+        <div x-data="{primaryImage: '{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('images/products/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}',
                 images: [
                     @foreach($product->images as $image)
-                        '{{ Str::startsWith($image->image_path, 'http') ? $image->image_path : asset('storage/' . $image->image_path) }}',
+                        '{{ Str::startsWith($image->image_path, 'http') ? $image->image_path : asset('images/products/' . $image->image_path) }}',
                     @endforeach
                 ]}">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
@@ -67,7 +67,7 @@
                     <div
                         class="bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl overflow-hidden shadow-lg glow-hover transition p-2">
                         <a href="{{ route('products.show', $relatedProduct->slug) }}">
-                            <img src="{{ $relatedProduct->images->isNotEmpty() ? (Str::startsWith($relatedProduct->images->first()->image_path, 'http') ? $relatedProduct->images->first()->image_path : asset('storage/' . $relatedProduct->images->first()->image_path)) : asset('images/necklace.jpg') }}"
+                            <img src="{{ $relatedProduct->images->isNotEmpty() ? (Str::startsWith($relatedProduct->images->first()->image_path, 'http') ? $relatedProduct->images->first()->image_path : asset('images/products/' . $relatedProduct->images->first()->image_path)) : asset('images/necklace.jpg') }}"
                                 alt="{{ $relatedProduct->name }}" class="w-full h-64 object-cover rounded-xl">
                             <div class="p-5 hero-text">
                                 <h4 class="text-xl font-medium text-[#d4af37] truncate">{{ $relatedProduct->name }}</h4>

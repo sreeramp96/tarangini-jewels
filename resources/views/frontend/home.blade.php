@@ -18,38 +18,32 @@
          }"
          x-init="startAutoplay()">
 
-        {{-- Carousel Container --}}
         <div class="relative w-full h-full">
-            {{-- Loop through carousel products --}}
             @foreach($heroCarouselProducts as $index => $heroProduct)
                 <div
                     x-show="activeSlide === {{ $index }}"
-                    class="absolute inset-0 transition-opacity duration-1000 ease-in-out" {{-- Slower transition --}}
-                    x-transition:enter="opacity-0"
+                    class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
                     x-transition:enter-start="opacity-0"
                     x-transition:enter-end="opacity-100"
                     x-transition:leave="opacity-100"
                     x-transition:leave-start="opacity-100"
                     x-transition:leave-end="opacity-0"
-                    style="display: none;"> {{-- Hide initially to prevent flash --}}
+                    style="display: none;">
 
-                    <img src="{{ Str::startsWith($heroProduct->images->first()->image_path, 'http') ? $heroProduct->images->first()->image_path : asset('storage/' . $heroProduct->images->first()->image_path) }}"
+                    <img src="{{ Str::startsWith($heroProduct->images->first()->image_path, 'http') ? $heroProduct->images->first()->image_path : asset('images/products/' . $heroProduct->images->first()->image_path) }}"
                          alt="{{ $heroProduct->name }}"
                          class="w-full h-full object-cover">
-                    {{-- Added dark overlay directly on image container for readability --}}
                     <div class="absolute inset-0 bg-black/40"></div>
                 </div>
             @endforeach
         </div>
-
-        {{-- Removed carousel controls (prev/next/dots) for background style --}}
     </div>
 
-    <div class="relative z-10 lg:w-1/2 max-w-xl text-white"> {{-- Added text-white --}}
+    <div class="relative z-10 lg:w-1/2 max-w-xl text-white">
         <h2 class="text-4xl lg:text-6xl font-bold hero-text gold-gradient mb-6 leading-tight">
             Elegance Redefined<br>in Every Jewel
         </h2>
-        <p class="text-lg text-gray-200 mb-8 leading-relaxed"> {{-- Adjusted text color --}}
+        <p class="text-lg text-gray-200 mb-8 leading-relaxed">
             Discover handcrafted luxury with a touch of divine grace. Every piece at <span
                 class="text-brand-gold font-semibold">Tarangini</span>
             embodies timeless beauty and artistry.
@@ -98,7 +92,7 @@
                     <a href="{{ route('products.show', $product->slug) }}" class="block">
                         {{-- Image Container --}}
                         <div class="relative overflow-hidden">
-                            <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('storage/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}"
+                            <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('images/products/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}"
                                 alt="{{ $product->name }}"
                                 class="w-full h-72 object-cover transition duration-500 ease-in-out group-hover:scale-105">
 
