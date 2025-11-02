@@ -122,7 +122,6 @@
                                 <li>Separate multiple image filenames in the `images` column with a pipe (`|`).</li>
                                 <li>`is_featured` should be `1` (or `TRUE`) for featured, `0` (or `FALSE` or empty) otherwise.</li>
                                 <li>**Important:** Image files must be uploaded separately (e.g., to `storage/app/public/import-images/`) before running this import. This tool only links the filenames.</li>
-                                {{-- Add a link to download a template --}}
                                 <li><a href="{{ asset('downloads/SAMPLE PRODUCT DETAILS.xlsx') }}" download class="text-blue-400 hover:underline">Download Template</a></li>
                             </ul>
                         </div>

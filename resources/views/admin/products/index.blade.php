@@ -18,9 +18,7 @@
     <form method="GET" action="{{ route('admin.products.index') }}">
         <div class="mb-6 flex flex-col md:flex-row gap-4">
             <div class="relative flex-grow">
-                {{-- Added name="search" --}}
                 <input type="text" name="search" placeholder="Search products by name..." value="{{ request('search') }}"
-                    {{-- Keep the search term visible --}}
                     class="w-full pl-10 pr-4 py-2 border border-gray-600 bg-[#0a2e2b] text-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-yellow-500 placeholder-gray-500">
                 <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                     <x-heroicon-o-magnifying-glass class="w-5 h-5" />
@@ -28,12 +26,10 @@
             </div>
 
             <div class="relative">
-                {{-- Added name="category_id" --}}
                 <select name="category_id"
                     class="appearance-none w-full md:w-48 pl-4 pr-10 py-2 border border-gray-600 bg-[#0a2e2b] text-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-yellow-500">
                     <option value="">All Categories</option>
                     @foreach($categories as $category)
-                        {{-- Keep the selected category visible --}}
                         <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
                             {{ $category->name }}
                         </option>
@@ -57,26 +53,19 @@
                     <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('storage/' . $product->images->first()->image_path)) : asset('images/placeholder-necklace.jpg') }}"
                         alt="{{ $product->name }}"
                         class="w-full h-full object-cover transition duration-300 ease-in-out group-hover:scale-105">
-
-                    {{-- Featured Badge --}}
                     @if($product->is_featured)
                         <span
                             class="absolute top-2 left-2 bg-yellow-500 text-black text-xs font-bold px-2 py-0.5 rounded-full shadow">Featured</span>
                     @endif
-
-                    {{-- Stock Badge --}}
                     <span
                         class="absolute top-2 right-2 {{ $product->stock > 0 ? 'bg-green-600' : 'bg-red-600' }} text-white text-xs font-semibold px-2 py-0.5 rounded-full shadow">
                         {{ $product->stock > 0 ? $product->stock . ' in stock' : 'Out of stock' }}
                     </span>
                 </div>
 
-                {{-- Product Info --}}
                 <div class="p-4 flex flex-col flex-grow">
                     <h2 class="text-lg font-semibold text-gray-100 hero-text truncate mb-1">{{ $product->name }}</h2>
                     <p class="text-sm text-gray-400 mb-2">{{ $product->category->name ?? 'N/A' }}</p>
-
-                    {{-- Price --}}
                     <p class="text-lg font-semibold text-white mb-3">
                         @if($product->discount_price)
                             <span class="line-through text-gray-500 text-sm">₹{{ number_format($product->price, 2) }}</span>
@@ -105,14 +94,12 @@
         @empty
             <div class="col-span-full text-center text-gray-400 py-12">
                 <p class="text-lg">
-                    {{-- Show a different message if filters are active --}}
                     @if(request('search') || request('category_id'))
                         No products found matching your filters.
                     @else
                         No products found.
                     @endif
                 </p>
-                {{-- Optional: Link to clear filters --}}
                 @if(request('search') || request('category_id'))
                     <a href="{{ route('admin.products.index') }}" class="text-blue-400 hover:underline mt-2 inline-block">Clear
                         Filters</a>
@@ -122,7 +109,6 @@
 
     </div>
     <div class="mt-8">
-        {{-- Append query string parameters to pagination links --}}
         {{ $products->appends(request()->query())->links() }}
     </div>
 @endsection

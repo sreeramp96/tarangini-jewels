@@ -24,7 +24,7 @@
                 <x-heroicon-o-heart class="w-6 h-6" />
             </a>
 
-            <a href="#" class="relative text-gray-200 hover:text-[#d4af37] transition">
+            <a href="{{ route('cart.index') }}" class="relative text-gray-200 hover:text-[#d4af37] transition">
                 <span class="sr-only">Cart</span>
                 <x-heroicon-o-shopping-bag class="w-6 h-6" />
                 <span
