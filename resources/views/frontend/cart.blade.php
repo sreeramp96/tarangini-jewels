@@ -111,7 +111,7 @@
                         <p class="text-sm text-gray-500 mt-1">Shipping & taxes calculated.</p>
 
                         <div class="mt-6">
-                            <a href="#" class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block">
+                            <a href="{{ route('checkout.index') }}" class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block">
                                 Proceed to Checkout
                             </a>
                         </div>

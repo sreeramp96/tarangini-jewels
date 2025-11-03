@@ -50,7 +50,7 @@
         @forelse($products as $product)
             <div class="bg-[#0d4837] border border-[#d4af37]/40 rounded-lg shadow-md overflow-hidden flex flex-col group">
                 <div class="relative aspect-square overflow-hidden">
-                    <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('storage/' . $product->images->first()->image_path)) : asset('images/placeholder-necklace.jpg') }}"
+                    <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('images/products/' . $product->images->first()->image_path)) : asset('images/placeholder-necklace.jpg') }}"
                         alt="{{ $product->name }}"
                         class="w-full h-full object-cover transition duration-300 ease-in-out group-hover:scale-105">
                     @if($product->is_featured)
