@@ -113,7 +113,7 @@
                      <x-heroicon-o-tag class="w-6 h-6 flex-shrink-0" />
                     <span class="ml-3 overflow-hidden whitespace-nowrap" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 w-0'" x-transition>Categories</span>
                 </a>
-                <a href="#" class="flex items-center px-4 py-2 rounded hover:bg-[#0d4837] transition group">
+                <a href="{{ route('admin.orders.index') }}" class="flex items-center px-4 py-2 rounded hover:bg-[#0d4837] transition group">
                      <x-heroicon-o-shopping-cart class="w-6 h-6 flex-shrink-0" />
                     <span class="ml-3 overflow-hidden whitespace-nowrap" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 w-0'" x-transition>Orders</span>
                 </a>
@@ -125,7 +125,7 @@
                     @csrf
                     <a href="{{ route('logout') }}"
                        onclick="event.preventDefault(); this.closest('form').submit();"
-                       class="flex items-center px-4 py-2 rounded text-red-400 hover:bg-red-900/50 hover:text-red-300 transition block group">
+                       class="flex items-center px-4 py-2 rounded text-red-400 hover:bg-red-900/50 hover:text-red-300 transition group">
                         <x-heroicon-o-arrow-left-on-rectangle class="w-6 h-6 flex-shrink-0" />
                         <span class="ml-3 overflow-hidden whitespace-nowrap" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 w-0'" x-transition>Log Out</span>
                     </a>

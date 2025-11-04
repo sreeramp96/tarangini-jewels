@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\ProductController;
 
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -42,6 +43,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('products', ProductController::class);
     Route::get('products/import', [ProductController::class, 'showImportForm'])->name('products.import.form');
     Route::post('products/import', [ProductController::class, 'handleImport'])->name('products.import.handle');
+
+    Route::resource('orders', OrderController::class)->only(['index', 'show', 'update']);
 });
 
 require __DIR__ . '/auth.php';

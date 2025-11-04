@@ -93,16 +93,25 @@ class CheckoutController extends Controller
         // 4. Create the Order in a database transaction
         // This ensures if one step fails, all steps are rolled back.
         DB::beginTransaction();
-
         try {
             // Create the Order
             $order = Order::create([
                 'user_id' => $user->id,
                 'order_number' => 'TJ-' . strtoupper(Str::random(10)),
                 'total_amount' => $grandTotal,
-                'status' => 'pending', // 'pending' until payment is confirmed
-                // Add address fields to your 'orders' table migration if you want to store them
-                // 'shipping_address' => json_encode($validated),
+                'status' => 'pending',
+
+                // --- ADD THESE NEW FIELDS ---
+                'subtotal' => $subtotal,
+                'taxes' => $taxes,
+                'shipping_cost' => $shippingCost,
+                'shipping_first_name' => $validated['first_name'],
+                'shipping_last_name' => $validated['last_name'],
+                'shipping_phone' => $validated['phone'],
+                'shipping_address' => $validated['address'],
+                'shipping_city' => $validated['city'],
+                'shipping_state' => $validated['state'],
+                'shipping_zipcode' => $validated['zipcode'],
             ]);
 
             // Create Order Items
@@ -120,7 +129,6 @@ class CheckoutController extends Controller
 
             // 6. Commit the transaction
             DB::commit();
-
         } catch (\Exception $e) {
             // If anything went wrong, roll back
             DB::rollBack();
