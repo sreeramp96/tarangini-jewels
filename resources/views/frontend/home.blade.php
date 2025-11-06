@@ -2,54 +2,47 @@
 
 @section('content')
 
-<section
-    class="relative flex items-center justify-start px-6 lg:px-20 min-h-[70vh] lg:min-h-[80vh] overflow-hidden">
-    <div class="absolute inset-0 z-0"
-         x-data="{
-             activeSlide: 0,
-             slides: {{ $heroCarouselProducts->count() }},
-             autoplay: null,
-             startAutoplay() {
-                this.autoplay = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slides }, 5000)
-             },
-             stopAutoplay() { clearInterval(this.autoplay) }
-         }"
-         x-init="startAutoplay()">
+    <section class="relative flex items-center justify-start px-6 lg:px-20 min-h-[70vh] lg:min-h-[80vh] overflow-hidden">
+        <div class="absolute inset-0 z-0" x-data="{
+                 activeSlide: 0,
+                 slides: {{ $heroCarouselProducts->count() }},
+                 autoplay: null,
+                 startAutoplay() {
+                    this.autoplay = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slides }, 5000)
+                 },
+                 stopAutoplay() { clearInterval(this.autoplay) }
+             }" x-init="startAutoplay()">
 
-        <div class="relative w-full h-full">
-            @foreach($heroCarouselProducts as $index => $heroProduct)
-                <div
-                    x-show="activeSlide === {{ $index }}"
-                    class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="opacity-100"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    style="display: none;">
+            <div class="relative w-full h-full">
+                @foreach($heroCarouselProducts as $index => $heroProduct)
+                    <div x-show="activeSlide === {{ $index }}"
+                        class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+                        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                        x-transition:leave="opacity-100" x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0" style="display: none;">
 
-                    <img src="{{ Str::startsWith($heroProduct->images->first()->image_path, 'http') ? $heroProduct->images->first()->image_path : asset('images/products/' . $heroProduct->images->first()->image_path) }}"
-                         alt="{{ $heroProduct->name }}"
-                         class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-black/40"></div>
-                </div>
-            @endforeach
+                        <img src="{{ Str::startsWith($heroProduct->images->first()->image_path, 'http') ? $heroProduct->images->first()->image_path : asset('images/products/' . $heroProduct->images->first()->image_path) }}"
+                            alt="{{ $heroProduct->name }}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/40"></div>
+                    </div>
+                @endforeach
+            </div>
         </div>
-    </div>
 
-    <div class="relative z-10 lg:w-1/2 max-w-xl text-white">
-        <h2 class="text-4xl lg:text-6xl font-bold hero-text gold-gradient mb-6 leading-tight">
-            Elegance Redefined<br>in Every Jewel
-        </h2>
-        <p class="text-lg text-gray-200 mb-8 leading-relaxed">
-            Discover handcrafted luxury with a touch of divine grace. Every piece at <span
-                class="text-brand-gold font-semibold">Tarangini</span>
-            embodies timeless beauty and artistry.
-        </p>
-        <a href="#featured-products" class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block">Explore Collection</a>
-    </div>
+        <div class="relative z-10 lg:w-1/2 max-w-xl text-white">
+            <h2 class="text-4xl lg:text-6xl font-bold hero-text gold-gradient mb-6 leading-tight">
+                Elegance Redefined<br>in Every Jewel
+            </h2>
+            <p class="text-lg text-gray-200 mb-8 leading-relaxed">
+                Discover handcrafted luxury with a touch of divine grace. Every piece at <span
+                    class="text-brand-gold font-semibold">Tarangini</span>
+                embodies timeless beauty and artistry.
+            </p>
+            <a href="#featured-products" class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block">Explore
+                Collection</a>
+        </div>
 
-</section>
+    </section>
 
     <section id="categories" class="bg-gray-100 px-6 lg:px-20 py-20">
         <h3 class="text-3xl lg:text-4xl font-semibold text-center text-gray-800 mb-12 hero-text">
@@ -102,11 +95,15 @@
                                         stock</span>
                                 @endif
                             </div>
-
-                            <button
-                                class="absolute top-2 right-2 bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition">
-                                <x-heroicon-o-heart class="w-5 h-5" />
-                            </button>
+                            <form action="{{ route('wishlist.add', $product->id) }}" method="POST"
+                                class="absolute top-2 right-2 z-10">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition"
+                                    title="Add to Wishlist">
+                                    <x-heroicon-o-heart class="w-5 h-5" /> {{-- Outline heart for "add" --}}
+                                </button>
+                            </form>
                         </div>
 
                         <div class="p-4 text-center">
@@ -120,7 +117,8 @@
                                     <span class="font-semibold text-gray-800">₹{{ number_format($product->price, 0) }}</span>
                                 @endif
                             </p>
-                            <button class="mt-3 w-full btn-dark px-4 py-2 text-sm rounded btn-gold glow-hover">Add to Cart</button>
+                            <button class="mt-3 w-full btn-dark px-4 py-2 text-sm rounded btn-gold glow-hover">Add to
+                                Cart</button>
                         </div>
                     </a>
                 </div>

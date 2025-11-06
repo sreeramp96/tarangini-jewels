@@ -67,9 +67,15 @@
                                 </button>
 
                                 {{-- Wishlist Button --}}
-                                <button type="button" class="p-4 border border-[#d4af37]/40 rounded glow-hover">
-                                    <x-heroicon-o-heart class="w-6 h-6 text-[#d4af37]" />
+                            <form action="{{ route('wishlist.add', $product->id) }}" method="POST"
+                                class="absolute top-2 right-2 z-10">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition"
+                                    title="Add to Wishlist">
+                                    <x-heroicon-o-heart class="w-5 h-5" /> {{-- Outline heart for "add" --}}
                                 </button>
+                            </form>
                             </div>
                             @if($product->stock <= 0)
                                 <p class="text-red-500 text-sm mt-2">This product is currently out of stock.</p>

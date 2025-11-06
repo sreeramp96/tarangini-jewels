@@ -10,6 +10,8 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Frontend\CheckoutController;
+use App\Http\Controllers\Frontend\WishlistController;
+use App\Http\Controllers\Frontend\OrderHistoryController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -28,6 +30,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+
+    Route::get('/my-orders', [OrderHistoryController::class, 'index'])->name('orders.index');
+    Route::get('/my-orders/{order}', [OrderHistoryController::class, 'show'])->name('orders.show');
+
+    Route::get('/my-wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/add/{product}', [WishlistController::class, 'add'])->name('wishlist.add');
+    Route::delete('/wishlist/remove/{product}', [WishlistController::class, 'remove'])->name('wishlist.remove');
 
     Route::get('/order-placed', function () {
         if (!session('order_success')) {

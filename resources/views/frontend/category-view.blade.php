@@ -34,9 +34,15 @@
                              @endif
                          </div>
                          {{-- Wishlist Heart --}}
-                         <button class="absolute top-2 right-2 bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition">
-                            <x-heroicon-o-heart class="w-5 h-5" />
-                        </button>
+                            <form action="{{ route('wishlist.add', $product->id) }}" method="POST"
+                                class="absolute top-2 right-2 z-10">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition"
+                                    title="Add to Wishlist">
+                                    <x-heroicon-o-heart class="w-5 h-5" /> {{-- Outline heart for "add" --}}
+                                </button>
+                            </form>
                     </div>
                     {{-- Product Info --}}
                     <div class="p-4 text-center">
