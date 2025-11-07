@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('product_user_wishlist', function (Blueprint $table) {
+            // Foreign key for the user
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+
+            // Foreign key for the product
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+
+            // This ensures a user can't add the same product twice
+            $table->primary(['user_id', 'product_id']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('product_user_wishlist');
+    }
+};

@@ -15,6 +15,8 @@ use App\Http\Controllers\Frontend\OrderHistoryController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+Route::get('/search', [HomeController::class, 'search'])->name('search');
+
 Route::get('/products/{product:slug}', [HomeController::class, 'showProduct'])->name('products.show');
 Route::get('/categories/{category:slug}', [HomeController::class, 'showCategory'])->name('categories.show');
 

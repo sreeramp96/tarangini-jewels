@@ -55,7 +55,6 @@
         </div>
     </div>
 
-    {{-- Pagination Links --}}
     <div class="mt-6 text-gray-300">
         {{ $orders->links() }}
     </div>

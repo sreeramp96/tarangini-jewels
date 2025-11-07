@@ -55,4 +55,27 @@ class HomeController extends Controller
 
         return view('frontend.category-view', compact('category', 'products'));
     }
+
+    public function search(Request $request)
+    {
+        // 1. Get the search term from the URL query string (e.g., /search?query=...)
+        $query = $request->input('query');
+
+        // 2. Validate the query
+        if (!$query) {
+            return back()->with('error', 'Please enter a search term.');
+        }
+
+        // 3. Perform the search
+        // We'll search in the product 'name' and 'description'
+        // The '%' are wildcards, meaning "match anything"
+        $products = Product::with('images')
+            ->where('name', 'LIKE', "%{$query}%")
+            ->orWhere('description', 'LIKE', "%{$query}%")
+            ->latest()
+            ->paginate(16); // Paginate so we don't show 1,000 results at once
+
+        // 4. Return the results to a new view
+        return view('frontend.search-results', compact('products', 'query'));
+    }
 }
