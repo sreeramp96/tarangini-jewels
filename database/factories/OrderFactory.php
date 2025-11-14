@@ -19,11 +19,27 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
+        $firstName = fake()->firstName();
+        $lastName = fake()->lastName();
+
         return [
             'user_id' => User::inRandomOrder()->first()->id,
             'order_number' => 'TJ-' . fake()->unique()->numberBetween(100000, 999999),
-            'total_amount' => 0, // We will calculate this after creating items
             'status' => fake()->randomElement(['pending', 'shipped', 'delivered', 'cancelled']),
+
+            // --- ADD DUMMY/FAKE DATA FOR ALL NEW FIELDS ---
+            'subtotal' => 0, // We will calculate this in the 'configure' method
+            'taxes' => 0, // Will be calculated
+            'shipping_cost' => 100.00, // Or fake()->randomFloat(2, 50, 200)
+            'total_amount' => 0, // Will be calculated
+
+            'shipping_first_name' => $firstName,
+            'shipping_last_name' => $lastName,
+            'shipping_phone' => fake()->phoneNumber(),
+            'shipping_address' => fake()->streetAddress(),
+            'shipping_city' => fake()->city(),
+            'shipping_state' => fake()->state(),
+            'shipping_zipcode' => fake()->postcode(),
         ];
     }
 
@@ -33,18 +49,28 @@ class OrderFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Order $order) {
-            // Create between 1 and 5 order items
+            // Create between 1 and 5 order items for this order
             $items = OrderItem::factory()->count(rand(1, 5))->create([
                 'order_id' => $order->id,
             ]);
 
-            // Calculate the total_amount from the items and update the order
-            $total = $items->sum(function ($item) {
+            // --- RE-CALCULATE AND UPDATE TOTALS ---
+            $subtotal = $items->sum(function ($item) {
                 return $item->price * $item->quantity;
             });
 
-            $order->total_amount = $total;
-            $order->save();
+            $taxRate = 0.18; // 18%
+            $taxes = $subtotal * $taxRate;
+            $shippingCost = 100.00; // Use the same value from definition()
+            $grandTotal = $subtotal + $taxes + $shippingCost;
+
+            // Update the order with the correct calculated values
+            $order->update([
+                'subtotal' => $subtotal,
+                'taxes' => $taxes,
+                'shipping_cost' => $shippingCost,
+                'total_amount' => $grandTotal,
+            ]);
         });
     }
 }

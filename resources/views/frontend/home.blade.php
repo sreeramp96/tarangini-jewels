@@ -54,7 +54,11 @@
                     <div
                         class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out group-hover:shadow-xl">
                         <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                            @if($category->image)
+                            <img src="{{ asset('images/categories/' . $category->image) }}" alt="{{ $category->name }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            @else
                             <x-heroicon-o-sparkles class="w-16 h-16 text-gray-400" />
+                            @endif
                         </div>
                         <div class="p-4 text-center">
                             <h4 class="text-lg font-medium text-gray-800 group-hover:text-brand-gold transition hero-text">
