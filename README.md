@@ -5,6 +5,10 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+<p align="center">
+<a href="http://140.245.226.123/">Tarangini-Jewels</a>
+</p>
+
 ## About Tarangini Jewels
 
 At Tarangini Jewels, we blend ancient craftsmanship with modern elegance. Every piece narrates a story — inspired by Indian heritage, shaped with care, and perfected to shine for generations.
