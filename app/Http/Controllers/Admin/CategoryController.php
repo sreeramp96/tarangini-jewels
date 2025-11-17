@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -93,7 +93,7 @@ class CategoryController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image if it exists
             if ($category->image) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->image);
+                Storage::disk('public')->delete($category->image);
             }
             $validated['image'] = $request->file('image')->store('categories', 'public');
         }

@@ -12,6 +12,8 @@ class HomeController extends Controller
     public function index()
     {
         $featuredProducts = Product::with('images')
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
             ->where('is_featured', true)
             ->latest()
             ->take(8)
@@ -49,6 +51,8 @@ class HomeController extends Controller
     {
         // Load all products in this category, with their images
         $products = Product::with('images')
+            ->withAvg('reviews', 'rating') // <-- ADD THIS
+            ->withCount('reviews')
             ->where('category_id', $category->id)
             ->latest()
             ->paginate(12); // Paginate for long lists
@@ -70,6 +74,8 @@ class HomeController extends Controller
         // We'll search in the product 'name' and 'description'
         // The '%' are wildcards, meaning "match anything"
         $products = Product::with('images')
+            ->withAvg('reviews', 'rating') // <-- ADD THIS
+            ->withCount('reviews')
             ->where('name', 'LIKE', "%{$query}%")
             ->orWhere('description', 'LIKE', "%{$query}%")
             ->latest()

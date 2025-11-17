@@ -4,7 +4,7 @@
     <h1 class="text-3xl font-semibold text-gray-200 hero-text mb-6">Create New Category</h1>
 
     <div class="bg-[#0d4837] border border-[#d4af37]/40 p-8 rounded-lg shadow-md max-w-2xl">
-        <form action="{{ route('admin.categories.store') }}" method="POST">
+        <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-4">
@@ -23,9 +23,9 @@
             <div class="mb-4">
                 <x-input-label for="image" :value="__('Category Image')" class="!text-gray-200" />
                 <input type="file" id="image" name="image" accept="image/*" class="block w-full text-sm text-gray-400 mt-1
-                          file:mr-4 file:py-2 file:px-4
-                          file:rounded-full file:border-0 file:text-sm file:font-semibold
-                          file:bg-yellow-500 file:text-black hover:file:bg-yellow-600">
+                              file:mr-4 file:py-2 file:px-4
+                              file:rounded-full file:border-0 file:text-sm file:font-semibold
+                              file:bg-yellow-500 file:text-black hover:file:bg-yellow-600">
                 <x-input-error :messages="$errors->get('image')" class="mt-2" />
             </div>
 

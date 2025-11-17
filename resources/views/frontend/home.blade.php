@@ -55,7 +55,7 @@
                         class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out group-hover:shadow-xl">
                         <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
                             @if($category->image)
-                            <img src="{{ asset('images/categories/' . $category->image) }}" alt="{{ $category->name }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                             @else
                             <x-heroicon-o-sparkles class="w-16 h-16 text-gray-400" />
                             @endif
@@ -112,6 +112,9 @@
 
                         <div class="p-4 text-center">
                             <h4 class="text-md font-medium text-gray-800 truncate hero-text">{{ $product->name }}</h4>
+                            <div class="flex justify-center mt-2">
+                                 <x-star-rating :rating="$product->reviews_avg_rating" :count="$product->reviews_count" />
+                            </div>
                             <p class="text-gray-600 text-sm mt-1">
                                 @if($product->discount_price)
                                     <span class="line-through text-gray-400">₹{{ number_format($product->price, 0) }}</span>

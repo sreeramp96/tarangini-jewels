@@ -4,11 +4,11 @@
 @section('content')
     <main class="bg-[#0b3d2e] text-gray-200 py-16 px-6 lg:px-20">
         <div x-data="{primaryImage: '{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('images/products/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}',
-                    images: [
-                        @foreach($product->images as $image)
-                            '{{ Str::startsWith($image->image_path, 'http') ? $image->image_path : asset('images/products/' . $image->image_path) }}',
-                        @endforeach
-                    ]}">
+                        images: [
+                            @foreach($product->images as $image)
+                                '{{ Str::startsWith($image->image_path, 'http') ? $image->image_path : asset('images/products/' . $image->image_path) }}',
+                            @endforeach
+                        ]}">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
                 <div>
                     <div class="border border-[#d4af37]/40 rounded-2xl p-2 mb-4">
@@ -67,15 +67,15 @@
                                 </button>
 
                                 {{-- Wishlist Button --}}
-                            <form action="{{ route('wishlist.add', $product->id) }}" method="POST"
-                                class="absolute top-2 right-2 z-10">
-                                @csrf
-                                <button type="submit"
-                                    class="bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition"
-                                    title="Add to Wishlist">
-                                    <x-heroicon-o-heart class="w-5 h-5" /> {{-- Outline heart for "add" --}}
-                                </button>
-                            </form>
+                                <form action="{{ route('wishlist.add', $product->id) }}" method="POST"
+                                    class="absolute top-2 right-2 z-10">
+                                    @csrf
+                                    <button type="submit"
+                                        class="bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition"
+                                        title="Add to Wishlist">
+                                        <x-heroicon-o-heart class="w-5 h-5" /> {{-- Outline heart for "add" --}}
+                                    </button>
+                                </form>
                             </div>
                             @if($product->stock <= 0)
                                 <p class="text-red-500 text-sm mt-2">This product is currently out of stock.</p>
@@ -114,6 +114,90 @@
                         </a>
                     </div>
                 @endforeach
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto mt-20">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+
+                <div class="lg:col-span-1">
+                    <h3 class="text-2xl font-semibold hero-text text-gray-800 mb-6">Leave a Review</h3>
+
+                    @auth
+                        <form action="{{ route('reviews.store', $product->id) }}" method="POST"
+                            class="bg-gray-50 p-6 rounded-lg shadow-md">
+                            @csrf
+                            <p class="text-gray-600 mb-4">Share your thoughts with other customers:</p>
+
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Your Rating</label>
+                                <div class="flex items-center space-x-1" x-data="{ rating: 0, hoverRating: 0 }">
+                                    <template x-for="star in 5" :key="star">
+                                        <button @click.prevent="rating = star" @mouseenter="hoverRating = star"
+                                            @mouseleave="hoverRating = 0" class="text-gray-300 transition" :class="{
+                                                        'text-yellow-400': hoverRating >= star,
+                                                        'text-yellow-500': rating >= star && hoverRating === 0
+                                                    }">
+                                            <x-heroicon-s-star class="w-8 h-8" />
+                                        </button>
+                                    </template>
+                                    <input type="hidden" name="rating" x-model="rating">
+                                </div>
+                                <x-input-error :messages="$errors->get('rating')" class="mt-2" />
+                            </div>
+
+                            <div class="mb-4">
+                                <x-input-label for="comment" :value="__('Your Comment')" />
+                                <textarea id="comment" name="comment" rows="4"
+                                    class="block w-full mt-1 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md shadow-sm">{{ old('comment') }}</textarea>
+                                <x-input-error :messages="$errors->get('comment')" class="mt-2" />
+                            </div>
+
+                            <button type="submit" class="btn-gold px-6 py-2 rounded font-medium">Submit Review</button>
+                        </form>
+                    @else
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center">
+                            <p class="text-gray-600">You must be <a href="{{ route('login') }}"
+                                    class="text-brand-gold hover:underline font-semibold">logged in</a> to leave a review.</p>
+                        </div>
+                    @endauth
+                </div>
+
+                <div class="lg:col-span-2">
+                    <h3 class="text-2xl font-semibold hero-text text-gray-800 mb-6">Customer Reviews</h3>
+                    <div class="space-y-6">
+                        @forelse($product->reviews as $review)
+                            <div class="border-b border-gray-200 pb-6">
+                                <div class="flex items-center mb-2">
+                                    {{-- User Info --}}
+                                    <img src="{{ $review->user->avatar ? asset('storage/' . $review->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($review->user->name) . '&color=7F9CF5&background=EBF4FF' }}"
+                                        alt="{{ $review->user->name }}" class="w-10 h-10 rounded-full object-cover">
+                                    <div class="ml-3">
+                                        <span class="font-semibold text-gray-800 hero-text">{{ $review->user->name }}</span>
+                                        <span
+                                            class="text-sm text-gray-500 ml-2">{{ $review->created_at->diffForHumans() }}</span>
+                                    </div>
+                                </div>
+
+                                {{-- Star Rating Display --}}
+                                <div class="flex items-center mb-3">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <x-heroicon-s-star
+                                            class="w-5 h-5 {{ $i <= $review->rating ? 'text-yellow-500' : 'text-gray-300' }}" />
+                                    @endfor
+                                </div>
+
+                                {{-- Comment --}}
+                                <p class="text-gray-600 leading-relaxed">{{ $review->comment }}</p>
+                            </div>
+                        @empty
+                            <div class="bg-gray-50 p-6 rounded-lg text-center">
+                                <p class="text-gray-600">This product has no reviews yet. Be the first!</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
             </div>
         </section>
     </main>
