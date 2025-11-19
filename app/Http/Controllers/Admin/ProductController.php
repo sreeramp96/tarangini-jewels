@@ -79,7 +79,7 @@ class ProductController extends Controller
                 $path = $image->storeAs('products', $filename, 's3');
 
                 $product->images()->create([
-                    'image_path' => $path, // This saves "products/filename.jpg"
+                    'image_path' => $path,
                     'is_primary' => $isPrimary,
                 ]);
 

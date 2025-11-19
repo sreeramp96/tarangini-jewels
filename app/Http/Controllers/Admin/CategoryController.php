@@ -47,11 +47,6 @@ class CategoryController extends Controller
             $validated['image'] = $request->file('image')->store('categories', 's3');
         }
 
-        // If slug is empty, create one from the name
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['name']);
-        }
-
         Category::create($validated);
 
         return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
@@ -80,7 +75,6 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            // Make sure the unique check ignores the current category's slug
             'slug' => 'nullable|string|unique:categories,slug,' . $category->id,
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
