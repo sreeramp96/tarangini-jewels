@@ -56,12 +56,10 @@ class CartController extends Controller
             }
         }
 
-        // --- Calculate Price Breakdown ---
         $taxRate = 0.18;
         $shippingCost = ($subtotal > 0) ? 100.00 : 0.00;
         $taxes = $subtotal * $taxRate;
         $grandTotal = $subtotal + $taxes + $shippingCost;
-        // --- END: Price Breakdown ---
 
         return view('frontend.cart', compact(
             'cartItems',
@@ -69,7 +67,7 @@ class CartController extends Controller
             'taxes',
             'shippingCost',
             'grandTotal',
-            'taxRate' // Pass taxRate too
+            'taxRate'
         ));
     }
 

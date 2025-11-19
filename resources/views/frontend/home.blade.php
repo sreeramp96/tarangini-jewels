@@ -20,9 +20,7 @@
                         x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                         x-transition:leave="opacity-100" x-transition:leave-start="opacity-100"
                         x-transition:leave-end="opacity-0" style="display: none;">
-
-                        <img src="{{ Str::startsWith($heroProduct->images->first()->image_path, 'http') ? $heroProduct->images->first()->image_path : asset('images/products/' . $heroProduct->images->first()->image_path) }}"
-                            alt="{{ $heroProduct->name }}" class="w-full h-full object-cover">
+                        <img src="{{ $heroProduct->primary_image_url }}" alt="{{ $heroProduct->name }}" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-black/40"></div>
                     </div>
                 @endforeach
@@ -82,7 +80,7 @@
                 <div class="bg-white rounded-lg shadow overflow-hidden group relative">
                     <a href="{{ route('products.show', $product->slug) }}" class="block">
                         <div class="relative overflow-hidden">
-                            <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('images/products/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}"
+                            <img src="{{ $product->primary_image_url }}"
                                 alt="{{ $product->name }}"
                                 class="w-full h-72 object-cover transition duration-500 ease-in-out group-hover:scale-105">
                             <div class="absolute top-2 left-2 flex flex-col space-y-1">
@@ -105,7 +103,7 @@
                                 <button type="submit"
                                     class="bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition"
                                     title="Add to Wishlist">
-                                    <x-heroicon-o-heart class="w-5 h-5" /> {{-- Outline heart for "add" --}}
+                                    <x-heroicon-o-heart class="w-5 h-5" />
                                 </button>
                             </form>
                         </div>

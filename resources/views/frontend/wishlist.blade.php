@@ -1,3 +1,4 @@
+@use('Illuminate\Support\Facades\Storage')
 @extends('layouts.frontend')
 
 @section('content')
@@ -17,7 +18,7 @@
                 <div class="bg-white rounded-lg shadow overflow-hidden group relative">
                     <a href="{{ route('products.show', $product->slug) }}" class="block">
                         <div class="relative overflow-hidden">
-                            <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('images/products/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}"
+                            <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : Storage::url($product->images->first()->image_path)) : asset('images/necklace.jpg') }}"
                                  alt="{{ $product->name }}"
                                  class="w-full h-72 object-cover transition duration-500 ease-in-out group-hover:scale-105">
                         </div>

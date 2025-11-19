@@ -16,7 +16,7 @@ class ReviewFactory extends Factory
      */
     public function definition(): array
     {
-return [
+        return [
             // We will set user_id and product_id in the seeder
             'rating' => fake()->numberBetween(3, 5), // Make reviews mostly good
             'comment' => fake()->paragraph(rand(1, 3)), // 1 to 3 sentences

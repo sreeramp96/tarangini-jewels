@@ -1,9 +1,10 @@
+@use('Illuminate\Support\Facades\Storage')
 @extends('layouts.frontend')
 
 {{-- Use Alpine.js for a simple image gallery --}}
 @section('content')
     <main class="bg-[#0b3d2e] text-gray-200 py-16 px-6 lg:px-20">
-        <div x-data="{primaryImage: '{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : asset('images/products/' . $product->images->first()->image_path)) : asset('images/necklace.jpg') }}',
+        <div x-data="{primaryImage: '{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : Storage::url($product->images->first()->image_path)) : asset('images/necklace.jpg') }}',
                         images: [
                             @foreach($product->images as $image)
                                 '{{ Str::startsWith($image->image_path, 'http') ? $image->image_path : asset('images/products/' . $image->image_path) }}',

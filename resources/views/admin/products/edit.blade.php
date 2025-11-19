@@ -1,3 +1,4 @@
+@use('Illuminate\Support\Facades\Storage')
 @extends('admin.layouts.app')
 
 @section('content')

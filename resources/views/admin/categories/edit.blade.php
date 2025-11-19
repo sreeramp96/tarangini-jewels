@@ -1,3 +1,4 @@
+@use('Illuminate\Support\Facades\Storage')
 @extends('admin.layouts.app')
 
 @section('content')
@@ -23,7 +24,7 @@
             <div class="mb-4">
                 <x-input-label :value="__('Current Image')" class="!text-gray-200" />
                 @if($category->image)
-                    <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}"
+                    <img src="{{Storage::url($category->image) }}" alt="{{ $category->name }}"
                         class="w-32 h-32 object-cover rounded-lg mt-2 shadow-md">
                 @else
                     <p class="text-sm text-gray-400 mt-2">No image has been uploaded for this category.</p>

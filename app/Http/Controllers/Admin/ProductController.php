@@ -73,11 +73,13 @@ class ProductController extends Controller
 
         if ($request->hasFile('images')) {
             $isPrimary = true;
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('products', 'public');
+            foreach ($request->file('images') as $index => $image) {
+                $extension = $image->getClientOriginalExtension();
+                $filename = $product->slug . '-' . $product->id . '-' . uniqid() . '.' . $extension;
+                $path = $image->storeAs('products', $filename, 's3');
 
                 $product->images()->create([
-                    'image_path' => $path,
+                    'image_path' => $path, // This saves "products/filename.jpg"
                     'is_primary' => $isPrimary,
                 ]);
 
@@ -129,7 +131,7 @@ class ProductController extends Controller
         if ($request->has('delete_images')) {
             $imagesToDelete = ProductImage::whereIn('id', $request->delete_images)->get();
             foreach ($imagesToDelete as $image) {
-                Storage::disk('public')->delete($image->image_path);
+                Storage::disk('s3')->delete($image->image_path);
                 $image->delete();
             }
         }
@@ -137,7 +139,7 @@ class ProductController extends Controller
         if ($request->hasFile('images')) {
             $hasPrimary = $product->images()->where('is_primary', true)->exists();
             foreach ($request->file('images') as $imageFile) {
-                $path = $imageFile->store('products', 'public');
+                $path = $imageFile->store('products', 's3');
                 $product->images()->create([
                     'image_path' => $path,
                     'is_primary' => !$hasPrimary,
