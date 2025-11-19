@@ -1,3 +1,4 @@
+@use('Illuminate\Support\Facades\Storage')
 @extends('layouts.frontend')
 
 @section('content')
@@ -53,7 +54,7 @@
                         class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out group-hover:shadow-xl">
                         <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
                             @if($category->image)
-                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            <img src="{{Storage::url($category->image) }}" alt="{{ $category->name }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                             @else
                             <x-heroicon-o-sparkles class="w-16 h-16 text-gray-400" />
                             @endif

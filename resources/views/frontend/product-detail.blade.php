@@ -4,10 +4,10 @@
 {{-- Use Alpine.js for a simple image gallery --}}
 @section('content')
     <main class="bg-[#0b3d2e] text-gray-200 py-16 px-6 lg:px-20">
-        <div x-data="{primaryImage: '{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : Storage::url($product->images->first()->image_path)) : asset('images/necklace.jpg') }}',
+        <div x-data="{primaryImage: '{{ $product->primary_image_url }}',
                         images: [
                             @foreach($product->images as $image)
-                                '{{ Str::startsWith($image->image_path, 'http') ? $image->image_path : asset('images/products/' . $image->image_path) }}',
+                                '{{ Storage::url($image->image_path) }}',
                             @endforeach
                         ]}">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
@@ -96,8 +96,8 @@
                     <div
                         class="bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl overflow-hidden shadow-lg glow-hover transition p-2">
                         <a href="{{ route('products.show', $relatedProduct->slug) }}">
-                            <img src="{{ $relatedProduct->images->isNotEmpty() ? (Str::startsWith($relatedProduct->images->first()->image_path, 'http') ? $relatedProduct->images->first()->image_path : asset('images/products/' . $relatedProduct->images->first()->image_path)) : asset('images/necklace.jpg') }}"
-                                alt="{{ $relatedProduct->name }}" class="w-full h-64 object-cover rounded-xl">
+                            <img src="{{ $relatedProduct->primary_image_url }}" alt="{{ $relatedProduct->name }}"
+                                class="w-full h-64 object-cover rounded-xl">
                             <div class="p-5 hero-text">
                                 <h4 class="text-xl font-medium text-[#d4af37] truncate">{{ $relatedProduct->name }}</h4>
                                 <p class="text-gray-300 text-sm mt-2">
@@ -171,7 +171,7 @@
                             <div class="border-b border-gray-200 pb-6">
                                 <div class="flex items-center mb-2">
                                     {{-- User Info --}}
-                                    <img src="{{ $review->user->avatar ? asset('storage/' . $review->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($review->user->name) . '&color=7F9CF5&background=EBF4FF' }}"
+                                    <img src="{{ $review->user->avatar ? Storage::url($review->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($review->user->name) . '&color=7F9CF5&background=EBF4FF' }}"
                                         alt="{{ $review->user->name }}" class="w-10 h-10 rounded-full object-cover">
                                     <div class="ml-3">
                                         <span class="font-semibold text-gray-800 hero-text">{{ $review->user->name }}</span>
