@@ -86,35 +86,49 @@
                         </div>
                     @endforeach
 
+                    {{-- Cart Summary --}}
                     <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 text-right">
 
+                        {{-- Price Breakdown --}}
                         <div class="space-y-2 mb-6 text-gray-700">
                             <div class="flex justify-between">
                                 <span>Subtotal:</span>
-                                <span class="font-medium">₹{{ number_format($subtotal, 0) }}</span>
+                                {{-- Use $subtotal passed from controller --}}
+                                <span class="font-medium">₹{{ number_format($subtotal, 2) }}</span>
                             </div>
+
                             <div class="flex justify-between">
-                                <span>Taxes ({{ $taxRate * 100 }}%):</span>
-                                <span class="font-medium">₹{{ number_format($taxes, 0) }}</span>
+                                {{-- Use $tax_rate to show percentage --}}
+                                <span>Taxes ({{ $tax_rate * 100 }}%):</span>
+                                <span class="font-medium">₹{{ number_format($tax, 2) }}</span>
                             </div>
+
                             <div class="flex justify-between">
                                 <span>Shipping:</span>
-                                <span
-                                    class="font-medium">{{ $shippingCost > 0 ? '₹' . number_format($shippingCost, 0) : 'FREE' }}</span>
+                                <span class="font-medium">
+                                    {{-- Use $shipping passed from controller --}}
+                                    @if($shipping > 0)
+                                        ₹{{ number_format($shipping, 2) }}
+                                    @else
+                                        <span class="text-green-600">FREE</span>
+                                    @endif
+                                </span>
                             </div>
                         </div>
 
-                        <p class="text-xl font-semibold text-gray-800 border-t border-gray-200 pt-4">
-                            Grand Total: <span class="ml-2">₹{{ number_format($grandTotal, 0) }}</span>
-                        </p>
-
-                        <p class="text-sm text-gray-500 mt-1">Shipping & taxes calculated.</p>
-
-                        <div class="mt-6">
-                            <a href="{{ route('checkout.index') }}" class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block">
-                                Proceed to Checkout
-                            </a>
+                        {{-- Grand Total --}}
+                        <div class="border-t border-gray-200 pt-4 flex justify-between items-center">
+                            <span class="text-lg font-semibold text-gray-800">Grand Total:</span>
+                            <span class="text-2xl font-bold text-brand-gold">₹{{ number_format($grand_total, 2) }}</span>
                         </div>
+
+                        <p class="text-sm text-gray-500 mt-2 mb-6">Shipping & taxes calculated.</p>
+
+                        {{-- Checkout Button --}}
+                        <a href="{{ route('checkout.index') }}"
+                            class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block w-full md:w-auto text-center">
+                            Proceed to Checkout
+                        </a>
                     </div>
                 </div>
             @endif

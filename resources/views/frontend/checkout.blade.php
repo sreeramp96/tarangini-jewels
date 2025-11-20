@@ -80,32 +80,36 @@
                                 @endforeach
                             </div>
 
-                            <div class="space-y-2 mt-4 text-gray-700">
-                                <div class="flex justify-between">
+                            <div class="space-y-2 mt-4 text-gray-700 border-t border-gray-100 pt-4">
+                                <div class="flex justify-between text-sm">
                                     <span>Subtotal:</span>
-                                    <span class="font-medium">₹{{ number_format($subtotal, 0) }}</span>
+                                    <span class="font-medium">₹{{ number_format($subtotal, 2) }}</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span>Taxes ({{ $taxRate * 100 }}%):</span>
-                                    <span class="font-medium">₹{{ number_format($taxes, 0) }}</span>
+
+                                <div class="flex justify-between text-sm">
+                                    <span>Taxes ({{ $tax_rate * 100 }}%):</span>
+                                    <span class="font-medium">₹{{ number_format($tax, 2) }}</span>
                                 </div>
-                                <div class="flex justify-between">
+
+                                <div class="flex justify-between text-sm">
                                     <span>Shipping:</span>
-                                    <span
-                                        class="font-medium">{{ $shippingCost > 0 ? '₹' . number_format($shippingCost, 0) : 'FREE' }}</span>
+                                    <span class="font-medium">
+                                        @if($shipping > 0)
+                                            ₹{{ number_format($shipping, 2) }}
+                                        @else
+                                            <span class="text-green-600">FREE</span>
+                                        @endif
+                                    </span>
                                 </div>
                             </div>
 
-                            <p class="text-2xl font-semibold text-gray-800 border-t border-gray-200 pt-4 mt-4">
-                                Grand Total: <span class="ml-2">₹{{ number_format($grandTotal, 0) }}</span>
-                            </p>
-
-                            <div class="mt-6">
-                                <p class="text-sm text-gray-500">Payment will be handled securely (e.g., Stripe, Razorpay).
-                                    For now, clicking "Place Order" will confirm your order.</p>
+                            <div class="flex justify-between items-center border-t border-gray-200 pt-4 mt-4">
+                                <span class="text-lg font-semibold text-gray-800">Grand Total:</span>
+                                <span class="text-xl font-bold text-brand-gold">₹{{ number_format($grand_total, 2) }}</span>
                             </div>
 
-                            <button type="submit" class="mt-6 w-full btn-gold px-8 py-3 rounded font-semibold text-lg">
+                            <button type="submit"
+                                class="mt-6 w-full btn-gold px-8 py-3 rounded font-semibold text-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
                                 Place Order
                             </button>
                         </div>

@@ -7,19 +7,24 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $featuredProducts = Product::with('images')
-            ->withAvg('reviews', 'rating')
-            ->withCount('reviews')
-            ->where('is_featured', true)
-            ->latest()
-            ->take(8)
-            ->get();
-        $categories = Category::all();
+        $featuredProducts = Cache::remember('homepage_featured', 3600, function () {
+            return Product::with('images')
+                ->withAvg('reviews', 'rating')
+                ->withCount('reviews')
+                ->where('is_featured', true)
+                ->latest()
+                ->take(8)
+                ->get();
+        });
+        $categories = Cache::remember('homepage_categories', 3600, function () {
+            return Category::all();
+        });
         $heroCarouselProducts = $featuredProducts->filter(fn($p) => $p->images->isNotEmpty())->take(4);
 
         return view('frontend.home', compact(

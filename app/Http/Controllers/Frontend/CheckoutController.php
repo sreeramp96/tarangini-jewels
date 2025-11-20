@@ -10,10 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Services\OrderService;
 
 class CheckoutController extends Controller
 {
-    public function index()
+    public function index(OrderService $orderService)
     {
         // In a real refactor, you might move this to a 'CartService'
         $cartItems = collect();
@@ -38,24 +39,14 @@ class CheckoutController extends Controller
             ];
         });
 
-        $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
+        $totals = $orderService->calculateTotals($cartItems);
 
-        $taxRate = 0.18;
-        $shippingCost = ($subtotal > 0) ? 100.00 : 0.00;
-        $taxes = $subtotal * $taxRate;
-        $grandTotal = $subtotal + $taxes + $shippingCost;
-
-        return view('frontend.checkout', compact(
-            'cartItems',
-            'subtotal',
-            'taxes',
-            'shippingCost',
-            'grandTotal',
-            'taxRate'
-        ));
+        return view('frontend.checkout', array_merge([
+            'cartItems' => $cartItems
+        ], $totals));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, OrderService $orderService)
     {
         $user = Auth::user();
 
@@ -75,14 +66,8 @@ class CheckoutController extends Controller
             return redirect()->route('home')->with('error', 'Your cart is empty.');
         }
 
-        $subtotal = $cartItems->sum(function ($item) {
-            return ($item->product->discount_price ?? $item->product->price) * $item->quantity;
-        });
-
-        $taxRate = 0.18;
-        $shippingCost = 100.00;
-        $taxes = $subtotal * $taxRate;
-        $grandTotal = $subtotal + $taxes + $shippingCost;
+        $totals = $orderService->calculateTotals($cartItems);
+        $cartItemIds = $cartItems->pluck('id')->toArray();
 
         // --- TODO: Integrate real payment gateway (Stripe, Razorpay, etc.) here ---
         // For now, we'll assume payment is successful.
@@ -92,11 +77,11 @@ class CheckoutController extends Controller
             $order = Order::create([
                 'user_id' => $user->id,
                 'order_number' => 'TJ-' . strtoupper(Str::random(10)),
-                'total_amount' => $grandTotal,
+                'total_amount' => $totals['grand_total'],
                 'status' => 'pending',
-                'subtotal' => $subtotal,
-                'taxes' => $taxes,
-                'shipping_cost' => $shippingCost,
+                'subtotal' => $totals['subtotal'],
+                'taxes' => $totals['tax'],
+                'shipping_cost' => $totals['shipping'],
                 'shipping_first_name' => $validated['first_name'],
                 'shipping_last_name' => $validated['last_name'],
                 'shipping_phone' => $validated['phone'],
@@ -121,12 +106,12 @@ class CheckoutController extends Controller
                 }
             }
 
-            CartItem::where('user_id', $user->id)->delete();
+            CartItem::whereIn('id', $cartItemIds)->delete();
 
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('cart.index')->with('error', 'Something went wrong. Please try again.');
+            return redirect()->back()->with('error', 'Order failed.');
         }
 
         return redirect()->route('checkout.success')->with('order_success', true);

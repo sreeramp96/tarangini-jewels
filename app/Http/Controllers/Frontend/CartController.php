@@ -8,35 +8,44 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Services\OrderService;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(OrderService $orderService)
     {
         $cartItems = collect();
-        $subtotal = 0;
+        $totals = [
+            'subtotal' => 0,
+            'tax' => 0,
+            'shipping' => 0,
+            'grand_total' => 0,
+            'tax_rate' => 0,
+        ];
 
         if (Auth::check()) {
-            $userId = Auth::id();
-            $dbItems = CartItem::where('user_id', $userId)
+            $user = Auth::user();
+
+            $dbItems = CartItem::where('user_id', $user->id)
                 ->with(['product.images'])
                 ->get();
+
+            if ($dbItems->isNotEmpty()) {
+                $totals = $orderService->calculateTotals($dbItems);
+            }
 
             $cartItems = $dbItems->map(function ($item) {
                 return (object)[
                     'id' => $item->id,
-                    'user_id' => $item->user_id,
                     'product_id' => $item->product->id,
                     'name' => $item->product->name,
                     'price' => $item->product->discount_price ?? $item->product->price,
                     'quantity' => $item->quantity,
                     'stock' => $item->product->stock,
-                    'image' => $item->product->images->isNotEmpty() ? ($item->product->images->first()->image_path) : null,
+                    'image' => $item->product->primary_image_url,
                     'slug' => $item->product->slug
                 ];
             });
-
-            $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
         } else {
             $sessionCart = Session::get('cart', []);
             $productIds = array_keys($sessionCart);
@@ -54,19 +63,9 @@ class CartController extends Controller
             }
         }
 
-        $taxRate = 0.18;
-        $shippingCost = ($subtotal > 0) ? 100.00 : 0.00;
-        $taxes = $subtotal * $taxRate;
-        $grandTotal = $subtotal + $taxes + $shippingCost;
-
-        return view('frontend.cart', compact(
-            'cartItems',
-            'subtotal',
-            'taxes',
-            'shippingCost',
-            'grandTotal',
-            'taxRate'
-        ));
+        return view('frontend.cart', array_merge([
+            'cartItems' => $cartItems
+        ], $totals));
     }
     public function store(Request $request, Product $product)
     {
