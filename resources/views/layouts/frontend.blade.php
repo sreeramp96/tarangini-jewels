@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tarangini Jewels</title>
 <link rel="icon" type="image/x-icon" href="{{ asset('images/logo.ico') }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <link
     href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap"
     rel="stylesheet">

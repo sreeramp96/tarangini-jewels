@@ -94,6 +94,21 @@ class CartController extends Controller
             Session::put('cart', $cart);
         }
 
+        if ($request->wantsJson()) {
+            $newCount = 0;
+            if (Auth::check()) {
+                $newCount = CartItem::where('user_id', Auth::id())->sum('quantity');
+            } else {
+                $cart = Session::get('cart', []);
+                foreach ($cart as $item) $newCount += $item['quantity'];
+            }
+
+            return response()->json([
+                'message' => 'Product added to cart!',
+                'cartCount' => $newCount
+            ]);
+        }
+
         return redirect()->route('cart.index')->with('success', 'Product added to cart!');
     }
     public function update(Request $request, $id)

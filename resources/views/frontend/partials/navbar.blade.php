@@ -11,16 +11,34 @@
 
         <nav class="hidden md:flex items-center space-x-8 text-md font-medium">
             <a href="{{ route('home') }}" ...>Home</a>
-            <a href="{{ route('categories.show', 'gold-rings') }}" ...>Rings</a>
-            <a href="{{ route('categories.show', 'diamond-necklaces') }}" ...>Necklaces</a>
+            <div class="relative group" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+                <button class="flex items-center text-gray-200 hover:text-brand-gold transition focus:outline-none">
+                    <span>Collections</span>
+                    <x-heroicon-s-chevron-down class="w-4 h-4 ml-1" />
+                </button>
+
+                <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="opacity-0 transform scale-95"
+                    x-transition:enter-end="opacity-100 transform scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="opacity-100 transform scale-100"
+                    x-transition:leave-end="opacity-0 transform scale-95"
+                    class="absolute left-0 mt-0 w-48 bg-[#0a2e2b] border border-[#d4af37]/30 rounded-lg shadow-lg py-2 z-50 text-gray-200"
+                    style="display: none;">
+
+                    @foreach($navbarCategories as $cat)
+                        <a href="{{ route('categories.show', $cat->slug) }}"
+                            class="block px-4 py-2 text-sm hover:bg-[#0d4837] hover:text-brand-gold">
+                            {{ $cat->name }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
             <a href="{{ url('/#about') }}" class="text-gray-200 hover:text-brand-gold transition">About</a>
             <a href="{{ url('/#contact') }}" class="text-gray-200 hover:text-brand-gold transition">Contact</a>
         </nav>
 
         <div class="flex items-center space-x-5 lg:space-x-6">
-
-            {{-- === FIX #1: WORKING SEARCH FORM === --}}
-            {{-- This is now a mini-form that looks like an icon button --}}
             <form action="{{ route('search') }}" method="GET" class="relative">
                 <input type="text" name="query" placeholder="Search" class="w-full px-4 py-1.5 text-sm bg-white/10 border border-brand-gold/30 rounded-full text-gray-200 placeholder-gray-400
                               focus:outline-none focus:ring-1 focus:ring-brand-gold
@@ -30,28 +48,24 @@
                 </button>
             </form>
 
-            {{-- === FIX #2: TEXT/ICON COLORS === --}}
-
-            {{-- Wishlist Icon --}}
             <a href="{{ route('wishlist.index') }}" class="text-gray-200 hover:text-brand-gold transition">
                 <span class="sr-only">Wishlist</span>
                 <x-heroicon-o-heart class="w-6 h-6" />
             </a>
 
-            {{-- Cart Icon --}}
-            <a href="{{ route('cart.index') }}" class="relative text-gray-200 hover:text-brand-gold transition">
+            <a href="{{ route('cart.index') }}" class="relative text-gray-200 hover:text-brand-gold transition"
+                x-data="{ count: {{ $globalCartCount }} }" @cart-updated.window="count = $event.detail.count">
+
                 <span class="sr-only">Cart</span>
                 <x-heroicon-o-shopping-bag class="w-6 h-6" />
-                <span
-                    class="absolute -top-2 -right-2 w-4 h-4 text-xs font-bold bg-brand-gold text-white rounded-full flex items-center justify-center">0</span>
+
+                <span x-show="count > 0" x-text="count"
+                    class="absolute -top-2 -right-2 w-4 h-4 text-xs font-bold bg-brand-gold text-white rounded-full flex items-center justify-center">
+                </span>
             </a>
 
-            {{-- Auth: Login/Profile Icon --}}
             @auth
-                {{-- THIS IS THE WRAPPER YOU NEED --}}
                 <div class="relative" x-data="{ open: false }" @click.away="open = false">
-
-                    {{-- This is the button that toggles the dropdown --}}
                     <button @click="open = !open"
                         class="flex items-center space-x-2 text-gray-200 hover:text-brand-gold transition">
                         @if(Auth::user()->avatar)
@@ -64,7 +78,6 @@
                         <x-heroicon-s-chevron-down class="w-4 h-4" />
                     </button>
 
-                    {{-- This is your dropdown. It will now be "absolute" relative to the wrapper --}}
                     <div x-show="open"
                         class="absolute right-0 mt-2 w-48 bg-[#0a2e2b] border border-[#d4af37]/30 rounded-lg shadow-lg py-2 z-50 text-gray-200"
                         style="display: none;" x-transition:enter="transition ease-out duration-100"
@@ -93,7 +106,6 @@
                     </div>
                 </div>
             @else
-                {{-- Guest link... --}}
                 <a href="{{ route('login') }}" class="text-gray-200 hover:text-brand-gold transition">
                     <span class="sr-only">Login</span>
                     <x-heroicon-o-user class="w-6 h-6" />

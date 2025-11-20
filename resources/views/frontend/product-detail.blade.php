@@ -1,14 +1,13 @@
 @use('Illuminate\Support\Facades\Storage')
+@use('Illuminate\Support\Str')
 @extends('layouts.frontend')
 
 @section('content')
     <main class="bg-[#0b3d2e] text-gray-200 py-16 px-6 lg:px-20">
         <div x-data="{primaryImage: '{{ $product->primary_image_url }}',
-                            images: [
-                                @foreach($product->images as $image)
-                                    '{{ Storage::url($image->image_path) }}',
-                                @endforeach
-                            ]}">
+                  images: [@foreach($product->images as $image)
+                      '{{ Str::startsWith($image->image_path, 'http') ? $image->image_path : Storage::url($image->image_path) }}',
+                  @endforeach]}">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
                 <div>
                     <div class="border border-[#d4af37]/40 rounded-2xl p-2 mb-4">
@@ -49,36 +48,38 @@
                     </p>
 
                     <div class="flex items-center space-x-4">
-                        <form action="{{ route('cart.store', $product->id) }}" method="POST" class="mt-8">
-                            @csrf
-                            <div class="flex items-center space-x-4">
+                        <form x-data="addToCartForm" @submit.prevent="submit"
+                            action="{{ route('cart.store', $product->id) }}" method="POST" class="mt-8">
 
+                            <div class="flex items-center space-x-4">
                                 <div class="w-24">
                                     <label for="quantity" class="sr-only">Quantity</label>
-                                    <input type="number" id="quantity" name="quantity" value="1" min="1"
-                                        max="{{ $product->stock }}"
-                                        class="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-gold focus:border-brand-gold text-gray-800 text-center">
+                                    <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}"
+                                        class="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-gold text-center">
                                 </div>
-                                <button type="submit" class="flex-grow btn-gold px-8 py-4 rounded font-semibold text-lg"
-                                    @if($product->stock <= 0) disabled @endif>
-                                    {{ $product->stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
+
+                                <button type="submit"
+                                    class="flex-grow btn-gold px-8 py-4 rounded font-semibold text-lg flex justify-center items-center"
+                                    :disabled="loading || {{ $product->stock <= 0 ? 'true' : 'false' }}"
+                                    :class="{ 'opacity-75 cursor-not-allowed': loading }">
+
+                                    <svg x-show="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                        </path>
+                                    </svg>
+
+                                    <span
+                                        x-text="loading ? 'Adding...' : '{{ $product->stock > 0 ? 'Add to Cart' : 'Out of Stock' }}'"></span>
                                 </button>
 
-                                <form action="{{ route('wishlist.add', $product->id) }}" method="POST"
-                                    class="absolute top-2 right-2 z-10">
-                                    @csrf
-                                    <button type="submit"
-                                        class="bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition"
-                                        title="Add to Wishlist">
-                                        <x-heroicon-o-heart class="w-5 h-5" />
-                                    </button>
-                                </form>
+                                <button type="button" class="p-4 border border-[#d4af37]/40 rounded glow-hover">
+                                    <x-heroicon-o-heart class="w-6 h-6 text-[#d4af37]" />
+                                </button>
                             </div>
-                            @if($product->stock <= 0)
-                                <p class="text-red-500 text-sm mt-2">This product is currently out of stock.</p>
-                            @elseif($product->stock < 10)
-                                <p class="text-yellow-500 text-sm mt-2">Only {{ $product->stock }} left in stock!</p>
-                            @endif
                         </form>
                     </div>
                 </div>
@@ -132,9 +133,9 @@
                                     <template x-for="star in 5" :key="star">
                                         <button @click.prevent="rating = star" @mouseenter="hoverRating = star"
                                             @mouseleave="hoverRating = 0" class="text-gray-300 transition" :class="{
-                                                                'text-yellow-400': hoverRating >= star,
-                                                                'text-yellow-500': rating >= star && hoverRating === 0
-                                                            }">
+                                                                                'text-yellow-400': hoverRating >= star,
+                                                                                'text-yellow-500': rating >= star && hoverRating === 0
+                                                                            }">
                                             <x-heroicon-s-star class="w-8 h-8" />
                                         </button>
                                     </template>

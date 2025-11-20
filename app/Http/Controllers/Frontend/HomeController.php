@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
 
 class HomeController extends Controller
 {
@@ -18,12 +19,8 @@ class HomeController extends Controller
             ->latest()
             ->take(8)
             ->get();
-
         $categories = Category::all();
-
-        $heroCarouselProducts = $featuredProducts->filter(function ($product) {
-            return $product->images->isNotEmpty();
-        })->take(4);
+        $heroCarouselProducts = $featuredProducts->filter(fn($p) => $p->images->isNotEmpty())->take(4);
 
         return view('frontend.home', compact(
             'featuredProducts',
@@ -42,33 +39,72 @@ class HomeController extends Controller
 
         return view('frontend.product-detail', compact('product', 'relatedProducts'));
     }
-    public function showCategory(Category $category)
+    public function showCategory(Request $request, Category $category)
     {
-        $products = Product::with('images')
+        $query = Product::with('images')
             ->withAvg('reviews', 'rating')
             ->withCount('reviews')
-            ->where('category_id', $category->id)
-            ->latest()
-            ->paginate(12);
+            ->where('category_id', $category->id);
+
+        $this->applyFilters($query, $request);
+
+        $products = $query->paginate(12)->withQueryString();
 
         return view('frontend.category-view', compact('category', 'products'));
     }
     public function search(Request $request)
     {
-        $query = $request->input('query');
+        $queryTerm = $request->input('query');
 
-        if (!$query) {
-            return back()->with('error', 'Please enter a search term.');
-        }
-
-        $products = Product::with('images')
+        $query = Product::with('images')
             ->withAvg('reviews', 'rating')
             ->withCount('reviews')
-            ->where('name', 'LIKE', "%{$query}%")
-            ->orWhere('description', 'LIKE', "%{$query}%")
-            ->latest()
-            ->paginate(16);
+            ->where(function ($q) use ($queryTerm) {
+                $q->where('name', 'LIKE', "%{$queryTerm}%")
+                    ->orWhere('description', 'LIKE', "%{$queryTerm}%");
+            });
 
-        return view('frontend.search-results', compact('products', 'query'));
+        // Apply Filters using helper method
+        $this->applyFilters($query, $request);
+
+        $products = $query->paginate(16)->withQueryString();
+
+        return view('frontend.search-results', compact('products', 'queryTerm'));
+    }
+
+    private function applyFilters(Builder $query, Request $request)
+    {
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        if ($request->has('in_stock')) {
+            $query->where('stock', '>', 0);
+        }
+
+        if ($request->filled('sort')) {
+            switch ($request->sort) {
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'newest':
+                    $query->latest();
+                    break;
+                case 'oldest':
+                    $query->oldest();
+                    break;
+                default:
+                    $query->latest();
+                    break;
+            }
+        } else {
+            $query->latest();
+        }
     }
 }
