@@ -2,8 +2,6 @@
 
 @section('content')
     <h1 class="text-3xl font-semibold text-gray-200 mb-6 hero-text">Admin Dashboard</h1>
-
-    {{-- Cards are now dynamic --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 hero-text ">
 
         <div class="bg-[#0d4837] border border-[#d4af37]/40 p-6 rounded-lg shadow-md">
@@ -21,14 +19,12 @@
             <p class="text-3xl text-white font-semibold mt-2">{{ $pendingOrderCount }}</p>
         </div>
 
-        {{-- NEW ELEMENT: Total Customers --}}
         <div class="bg-[#0d4837] border border-[#d4af37]/40 p-6 rounded-lg shadow-md">
             <h2 class="text-xl font-bold hero-text text-[#d4af37]">Total Customers</h2>
             <p class="text-3xl text-white font-semibold mt-2">{{ $customerCount }}</p>
         </div>
     </div>
 
-    {{-- NEW ELEMENT: Recent Orders Table --}}
     <div class="mt-12 hero-text">
         <h2 class="text-2xl font-semibold text-gray-200 mb-4 hero-text">Recent Orders</h2>
 
@@ -50,15 +46,15 @@
                             <td class="px-6 py-4">{{ $order->user->name ?? 'Guest' }}</td>
                             <td class="px-6 py-4">
                                 <span class="px-2 py-1 rounded-full text-xs font-medium
-                                @if($order->status == 'pending')
-                                    bg-yellow-600 text-yellow-100
-                                @elseif($order->status == 'paid')
-                                    bg-green-600 text-green-100
-                                @elseif($order->status == 'shipped')
-                                    bg-blue-600 text-blue-100
-                                @else
-                                    bg-gray-600 text-gray-100
-                                @endif">
+                                        @if($order->status == 'pending')
+                                            bg-yellow-600 text-yellow-100
+                                        @elseif($order->status == 'paid')
+                                            bg-green-600 text-green-100
+                                        @elseif($order->status == 'shipped')
+                                            bg-blue-600 text-blue-100
+                                        @else
+                                            bg-gray-600 text-gray-100
+                                        @endif">
                                     {{ ucfirst($order->status) }}
                                 </span>
                             </td>

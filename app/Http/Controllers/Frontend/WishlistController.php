@@ -11,7 +11,6 @@ class WishlistController extends Controller
 {
     public function index()
     {
-        // Get the logged-in user and load their wishlist relationship
         $user = Auth::user();
         $wishlistedProducts = $user->wishlist()->with('images')->latest()->paginate(12);
 
@@ -22,8 +21,6 @@ class WishlistController extends Controller
     {
         $user = Auth::user();
 
-        // attach() checks for duplicates, so no need for an 'if' check.
-        // If the item already exists, it does nothing.
         $user->wishlist()->attach($product->id);
 
         return back()->with('success', 'Item added to your wishlist!');

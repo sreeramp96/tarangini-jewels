@@ -17,7 +17,6 @@ class CartController extends Controller
         $subtotal = 0;
 
         if (Auth::check()) {
-            // Logged-in user: Load directly from CartItem using user_id
             $userId = Auth::id();
             $dbItems = CartItem::where('user_id', $userId)
                 ->with(['product.images'])
@@ -25,8 +24,8 @@ class CartController extends Controller
 
             $cartItems = $dbItems->map(function ($item) {
                 return (object)[
-                    'id' => $item->id, // CartItem ID
-                    'user_id' => $item->user_id, // Include user_id if needed
+                    'id' => $item->id,
+                    'user_id' => $item->user_id,
                     'product_id' => $item->product->id,
                     'name' => $item->product->name,
                     'price' => $item->product->discount_price ?? $item->product->price,
@@ -39,7 +38,6 @@ class CartController extends Controller
 
             $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
         } else {
-            // Guest session logic remains the same
             $sessionCart = Session::get('cart', []);
             $productIds = array_keys($sessionCart);
 
@@ -70,45 +68,34 @@ class CartController extends Controller
             'taxRate'
         ));
     }
-
     public function store(Request $request, Product $product)
     {
         $quantity = $request->input('quantity', 1);
-        // ... (quantity validation) ...
 
         if (Auth::check()) {
-            // Logged-in user: Use CartItem with user_id
             $userId = Auth::id();
-            $cartItem = CartItem::where('user_id', $userId) // Query by user_id
+            $cartItem = CartItem::where('user_id', $userId)
                 ->where('product_id', $product->id)
                 ->first();
 
             if ($cartItem) {
-                // ... (update quantity logic) ...
                 $newQuantity = min($cartItem->quantity + $quantity, $product->stock);
                 $cartItem->quantity = $newQuantity;
                 $cartItem->save();
             } else {
                 CartItem::create([
-                    'user_id'    => $userId, // Link directly to user
+                    'user_id'    => $userId,
                     'product_id' => $product->id,
                     'quantity'   => $quantity,
                 ]);
             }
         } else {
-            // Guest session logic remains the same
             $cart = Session::get('cart', []);
-            // ... (rest of session logic) ...
             Session::put('cart', $cart);
         }
 
         return redirect()->route('cart.index')->with('success', 'Product added to cart!');
     }
-
-
-    /**
-     * Update the quantity of a cart item.
-     */
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -118,15 +105,13 @@ class CartController extends Controller
 
         if (Auth::check()) {
             $item = CartItem::findOrFail($id); // <-- Use $cartItem (from method signature)
-            if ($item->user_id !== Auth::id()) abort(403); // Use $item now
+            if ($item->user_id !== Auth::id()) abort(403);
 
-            if ($quantity > $item->product->stock) { // Use $item
+            if ($quantity > $item->product->stock) {
                 return back()->with('error', 'Requested quantity exceeds available stock.');
             }
-            $item->update(['quantity' => $quantity]); // Use $item
-
+            $item->update(['quantity' => $quantity]);
         } else {
-            // Session logic remains the same
             $cart = Session::get('cart', []);
             $productId = $id;
             if (isset($cart[$productId])) {
@@ -142,19 +127,13 @@ class CartController extends Controller
         }
         return redirect()->route('cart.index')->with('success', 'Cart updated.');
     }
-
-    /**
-     * Remove an item from the cart.
-     */
     public function destroy($id)
     {
         if (Auth::check()) {
             $cartItem = CartItem::findOrFail($id);
-            // Check ownership using user_id
             if ($cartItem->user_id !== Auth::id()) abort(403);
             $cartItem->delete();
         } else {
-            // Session logic remains the same
             $cart = Session::get('cart', []);
             $productId = $id;
             if (isset($cart[$productId])) {

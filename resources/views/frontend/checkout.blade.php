@@ -58,7 +58,7 @@
                     </div>
 
                     <div class="lg:col-span-1">
-                        <div class="bg-white p-8 rounded-lg shadow-md sticky top-28"> {{-- Sticky summary --}}
+                        <div class="bg-white p-8 rounded-lg shadow-md sticky top-28">
                             <h2 class="text-2xl font-semibold hero-text text-gray-800 mb-6">Your Order</h2>
 
                             <div class="space-y-4 max-h-64 overflow-y-auto border-b border-gray-200 pb-4">

@@ -48,12 +48,10 @@ class Product extends Model
 
         $path = $this->images->first()->image_path;
 
-        // Check if it's an external URL (fake data)
         if (Str::startsWith($path, ['http://', 'https://'])) {
             return $path;
         }
 
-        // Get the Cloud URL (automatically handles the path)
         return Storage::disk('s3')->url($path);
     }
 }

@@ -11,16 +11,13 @@ use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
-public function index()
+    public function index()
     {
-        // 1. Get counts for the cards
         $productCount = Product::count();
         $categoryCount = Category::count();
 
-        // Assuming 'Order' model exists from our previous plan
         $pendingOrderCount = Order::where('status', 'pending')->count();
 
-        // 2. Get data for new elements
         $customerCount = User::where('is_admin', false)->count();
         $recentOrders = Order::with('user')->latest()->take(5)->get();
 

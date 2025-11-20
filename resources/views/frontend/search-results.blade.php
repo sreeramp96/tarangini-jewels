@@ -14,7 +14,6 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
             @forelse($products as $product)
-                {{-- Product Card (Same as your category page) --}}
                 <div class="bg-white rounded-lg shadow overflow-hidden group relative">
                     <a href="{{ route('products.show', $product->slug) }}" class="block">
                         <div class="relative overflow-hidden">
@@ -22,7 +21,6 @@
                                 alt="{{ $product->name }}"
                                 class="w-full h-72 object-cover transition duration-500 ease-in-out group-hover:scale-105">
 
-                            {{-- Badges --}}
                             <div class="absolute top-2 left-2 flex flex-col space-y-1">
                                 @if($product->discount_price && $product->price > 0)
                                     @php $discountPercent = round((($product->price - $product->discount_price) / $product->price) * 100); @endphp
@@ -36,7 +34,6 @@
                                 @endif
                             </div>
 
-                            {{-- Wishlist Form --}}
                             <form action="{{ route('wishlist.add', $product->id) }}" method="POST"
                                 class="absolute top-2 right-2 z-10">
                                 @csrf
@@ -48,7 +45,6 @@
                             </form>
                         </div>
 
-                        {{-- Product Info --}}
                         <div class="p-4 text-center">
                             <h4 class="text-md font-medium text-gray-800 truncate hero-text">{{ $product->name }}</h4>
                             <div class="flex justify-center mt-2">
@@ -66,7 +62,6 @@
                         </div>
                     </a>
 
-                    {{-- "Add to Cart" Form --}}
                     <div class="px-4 pb-4">
                         <form action="{{ route('cart.store', $product->id) }}" method="POST">
                             @csrf
@@ -84,7 +79,6 @@
         </div>
 
         <div class="max-w-7xl mx-auto mt-12">
-            {{-- This adds links to other pages if there are many results --}}
             {{ $products->appends(['query' => $query])->links() }}
         </div>
     </main>

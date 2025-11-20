@@ -32,7 +32,7 @@ class ProductsImport implements ToModel, WithHeadingRow
         $product = Product::create([
             'category_id'    => $category->id,
             'name'           => $row['name'],
-            'slug'           => Str::slug($row['name']) . '-' . Str::random(5), // Add random suffix for uniqueness
+            'slug'           => Str::slug($row['name']) . '-' . Str::random(5),
             'description'    => $row['description'] ?? null,
             'price'          => $row['price'],
             'discount_price' => $row['discount_price'] ?? null,

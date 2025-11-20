@@ -1,15 +1,14 @@
 @use('Illuminate\Support\Facades\Storage')
 @extends('layouts.frontend')
 
-{{-- Use Alpine.js for a simple image gallery --}}
 @section('content')
     <main class="bg-[#0b3d2e] text-gray-200 py-16 px-6 lg:px-20">
         <div x-data="{primaryImage: '{{ $product->primary_image_url }}',
-                        images: [
-                            @foreach($product->images as $image)
-                                '{{ Storage::url($image->image_path) }}',
-                            @endforeach
-                        ]}">
+                            images: [
+                                @foreach($product->images as $image)
+                                    '{{ Storage::url($image->image_path) }}',
+                                @endforeach
+                            ]}">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
                 <div>
                     <div class="border border-[#d4af37]/40 rounded-2xl p-2 mb-4">
@@ -53,34 +52,31 @@
                         <form action="{{ route('cart.store', $product->id) }}" method="POST" class="mt-8">
                             @csrf
                             <div class="flex items-center space-x-4">
-                                {{-- Quantity Input (Optional but good) --}}
+
                                 <div class="w-24">
                                     <label for="quantity" class="sr-only">Quantity</label>
                                     <input type="number" id="quantity" name="quantity" value="1" min="1"
                                         max="{{ $product->stock }}"
                                         class="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-gold focus:border-brand-gold text-gray-800 text-center">
                                 </div>
-
-                                {{-- Add to Cart Button --}}
                                 <button type="submit" class="flex-grow btn-gold px-8 py-4 rounded font-semibold text-lg"
-                                    {{-- Disable button if out of stock --}} @if($product->stock <= 0) disabled @endif>
+                                    @if($product->stock <= 0) disabled @endif>
                                     {{ $product->stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
                                 </button>
 
-                                {{-- Wishlist Button --}}
                                 <form action="{{ route('wishlist.add', $product->id) }}" method="POST"
                                     class="absolute top-2 right-2 z-10">
                                     @csrf
                                     <button type="submit"
                                         class="bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition"
                                         title="Add to Wishlist">
-                                        <x-heroicon-o-heart class="w-5 h-5" /> {{-- Outline heart for "add" --}}
+                                        <x-heroicon-o-heart class="w-5 h-5" />
                                     </button>
                                 </form>
                             </div>
                             @if($product->stock <= 0)
                                 <p class="text-red-500 text-sm mt-2">This product is currently out of stock.</p>
-                            @elseif($product->stock < 10) {{-- Optional: Show low stock warning --}}
+                            @elseif($product->stock < 10)
                                 <p class="text-yellow-500 text-sm mt-2">Only {{ $product->stock }} left in stock!</p>
                             @endif
                         </form>
@@ -136,9 +132,9 @@
                                     <template x-for="star in 5" :key="star">
                                         <button @click.prevent="rating = star" @mouseenter="hoverRating = star"
                                             @mouseleave="hoverRating = 0" class="text-gray-300 transition" :class="{
-                                                        'text-yellow-400': hoverRating >= star,
-                                                        'text-yellow-500': rating >= star && hoverRating === 0
-                                                    }">
+                                                                'text-yellow-400': hoverRating >= star,
+                                                                'text-yellow-500': rating >= star && hoverRating === 0
+                                                            }">
                                             <x-heroicon-s-star class="w-8 h-8" />
                                         </button>
                                     </template>
@@ -170,7 +166,6 @@
                         @forelse($product->reviews as $review)
                             <div class="border-b border-gray-200 pb-6">
                                 <div class="flex items-center mb-2">
-                                    {{-- User Info --}}
                                     <img src="{{ $review->user->avatar ? Storage::url($review->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($review->user->name) . '&color=7F9CF5&background=EBF4FF' }}"
                                         alt="{{ $review->user->name }}" class="w-10 h-10 rounded-full object-cover">
                                     <div class="ml-3">
@@ -180,7 +175,6 @@
                                     </div>
                                 </div>
 
-                                {{-- Star Rating Display --}}
                                 <div class="flex items-center mb-3">
                                     @for ($i = 1; $i <= 5; $i++)
                                         <x-heroicon-s-star
@@ -188,7 +182,6 @@
                                     @endfor
                                 </div>
 
-                                {{-- Comment --}}
                                 <p class="text-gray-600 leading-relaxed">{{ $review->comment }}</p>
                             </div>
                         @empty

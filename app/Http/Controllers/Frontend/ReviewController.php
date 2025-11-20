@@ -16,14 +16,12 @@ class ReviewController extends Controller
             'comment' => 'nullable|string|max:1000',
         ]);
 
-        // Check if user has already reviewed this product
         $existingReview = $product->reviews()->where('user_id', Auth::id())->first();
 
         if ($existingReview) {
             return back()->with('error', 'You have already reviewed this product.');
         }
 
-        // Create the review
         $product->reviews()->create([
             'user_id' => Auth::id(),
             'rating' => $validated['rating'],

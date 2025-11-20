@@ -31,57 +31,44 @@ class HomeController extends Controller
             'heroCarouselProducts'
         ));
     }
-
     public function showProduct(Product $product)
     {
-        // Load the product's images and category
         $product->load('images', 'category');
-
-        // Get 4 related products from the same category
         $relatedProducts = Product::with('images')
             ->where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id) // Don't include this product
+            ->where('id', '!=', $product->id)
             ->take(4)
             ->get();
 
         return view('frontend.product-detail', compact('product', 'relatedProducts'));
     }
-
     public function showCategory(Category $category)
     {
-        // Load all products in this category, with their images
         $products = Product::with('images')
-            ->withAvg('reviews', 'rating') // <-- ADD THIS
+            ->withAvg('reviews', 'rating')
             ->withCount('reviews')
             ->where('category_id', $category->id)
             ->latest()
-            ->paginate(12); // Paginate for long lists
+            ->paginate(12);
 
         return view('frontend.category-view', compact('category', 'products'));
     }
-
     public function search(Request $request)
     {
-        // 1. Get the search term from the URL query string (e.g., /search?query=...)
         $query = $request->input('query');
 
-        // 2. Validate the query
         if (!$query) {
             return back()->with('error', 'Please enter a search term.');
         }
 
-        // 3. Perform the search
-        // We'll search in the product 'name' and 'description'
-        // The '%' are wildcards, meaning "match anything"
         $products = Product::with('images')
-            ->withAvg('reviews', 'rating') // <-- ADD THIS
+            ->withAvg('reviews', 'rating')
             ->withCount('reviews')
             ->where('name', 'LIKE', "%{$query}%")
             ->orWhere('description', 'LIKE', "%{$query}%")
             ->latest()
-            ->paginate(16); // Paginate so we don't show 1,000 results at once
+            ->paginate(16);
 
-        // 4. Return the results to a new view
         return view('frontend.search-results', compact('products', 'query'));
     }
 }
