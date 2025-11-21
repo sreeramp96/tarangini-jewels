@@ -110,7 +110,7 @@ class CartController extends Controller
 
         return redirect()->route('cart.index')->with('success', 'Product added to cart!');
     }
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, OrderService $orderService)
     {
         $validated = $request->validate([
             'quantity' => 'required|integer|min:1',
@@ -118,30 +118,43 @@ class CartController extends Controller
         $quantity = $validated['quantity'];
 
         if (Auth::check()) {
-            $item = CartItem::findOrFail($id); // <-- Use $cartItem (from method signature)
-            if ($item->user_id !== Auth::id()) abort(403);
+            $cartItem = CartItem::findOrFail($id);
+            if ($cartItem->user_id !== Auth::id()) abort(403);
 
-            if ($quantity > $item->product->stock) {
-                return back()->with('error', 'Requested quantity exceeds available stock.');
+            if ($quantity > $cartItem->product->stock) {
+                return response()->json(['success' => false, 'message' => 'Exceeds available stock'], 422);
             }
-            $item->update(['quantity' => $quantity]);
+            $cartItem->update(['quantity' => $quantity]);
         } else {
             $cart = Session::get('cart', []);
             $productId = $id;
             if (isset($cart[$productId])) {
                 $product = Product::find($productId);
-                if (!$product || $quantity > $product->stock) {
-                    return back()->with('error', 'Requested quantity exceeds available stock.');
+                if ($quantity > $product->stock) {
+                    return response()->json(['success' => false, 'message' => 'Exceeds available stock'], 422);
                 }
                 $cart[$productId]['quantity'] = $quantity;
                 Session::put('cart', $cart);
-            } else {
-                return back()->with('error', 'Item not found in cart.');
             }
+        }
+
+        if ($request->wantsJson()) {
+            $totals = $this->getCartTotals($orderService);
+
+            $count = Auth::check()
+                ? CartItem::where('user_id', Auth::id())->sum('quantity')
+                : array_sum(array_column(Session::get('cart', []), 'quantity'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Cart updated',
+                'totals' => $totals,
+                'cartCount' => $count
+            ]);
         }
         return redirect()->route('cart.index')->with('success', 'Cart updated.');
     }
-    public function destroy($id)
+    public function destroy(Request $request, $id, OrderService $orderService)
     {
         if (Auth::check()) {
             $cartItem = CartItem::findOrFail($id);
@@ -149,12 +162,46 @@ class CartController extends Controller
             $cartItem->delete();
         } else {
             $cart = Session::get('cart', []);
-            $productId = $id;
-            if (isset($cart[$productId])) {
-                unset($cart[$productId]);
+            if (isset($cart[$id])) {
+                unset($cart[$id]);
                 Session::put('cart', $cart);
             }
         }
-        return redirect()->route('cart.index')->with('success', 'Item removed.');
+
+        if ($request->wantsJson()) {
+            $totals = $this->getCartTotals($orderService);
+
+            $count = Auth::check()
+                ? CartItem::where('user_id', Auth::id())->sum('quantity')
+                : array_sum(array_column(Session::get('cart', []), 'quantity'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Item removed',
+                'totals' => $totals,
+                'cartCount' => $count
+            ]);
+        }
+
+        return redirect()->route('cart.index');
+    }
+
+    private function getCartTotals(OrderService $orderService)
+    {
+        $cartItems = collect();
+        if (Auth::check()) {
+            $dbItems = CartItem::where('user_id', Auth::id())->with('product')->get();
+            $cartItems = $dbItems;
+        } else {
+            $sessionCart = Session::get('cart', []);
+            $products = Product::findMany(array_keys($sessionCart));
+            foreach ($products as $product) {
+                $item = new CartItem(['quantity' => $sessionCart[$product->id]['quantity']]);
+                $item->setRelation('product', $product);
+                $cartItems->push($item);
+            }
+        }
+
+        return $orderService->calculateTotals($cartItems);
     }
 }

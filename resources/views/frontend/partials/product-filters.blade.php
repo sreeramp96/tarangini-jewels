@@ -1,10 +1,6 @@
 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 sticky top-24">
     <h3 class="text-lg font-semibold hero-text text-gray-800 mb-4">Filters</h3>
-
-    {{-- Form submits to the current URL (keeping category or search context) --}}
     <form action="{{ url()->current() }}" method="GET">
-
-        {{-- Keep search query if it exists --}}
         @if(request('query'))
             <input type="hidden" name="query" value="{{ request('query') }}">
         @endif
