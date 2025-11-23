@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Review;
 
 class HomeController extends Controller
 {
@@ -22,15 +23,24 @@ class HomeController extends Controller
                 ->take(8)
                 ->get();
         });
+
         $categories = Cache::remember('homepage_categories', 3600, function () {
             return Category::all();
         });
+
         $heroCarouselProducts = $featuredProducts->filter(fn($p) => $p->images->isNotEmpty())->take(4);
+
+        $reviews = Review::with('user')
+            ->where('rating', '>=', 4)
+            ->latest()
+            ->take(3)
+            ->get();
 
         return view('frontend.home', compact(
             'featuredProducts',
             'categories',
-            'heroCarouselProducts'
+            'heroCarouselProducts',
+            'reviews'
         ));
     }
     public function showProduct(Product $product)

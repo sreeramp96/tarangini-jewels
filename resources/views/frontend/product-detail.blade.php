@@ -4,10 +4,14 @@
 
 @section('content')
     <main class="bg-[#0b3d2e] text-gray-200 py-16 px-6 lg:px-20">
-        <div x-data="{primaryImage: '{{ $product->primary_image_url }}',
-                  images: [@foreach($product->images as $image)
-                      '{{ Str::startsWith($image->image_path, 'http') ? $image->image_path : Storage::url($image->image_path) }}',
-                  @endforeach]}">
+        <div x-data="{
+            primaryImage: '{{ $product->primary_image_url }}',
+            images: [
+                @foreach($product->getMedia('images') as $media)
+                    '{{ $media->getUrl() }}',
+                @endforeach
+            ]
+        }">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
                 <div>
                     <div class="border border-[#d4af37]/40 rounded-2xl p-2 mb-4">
@@ -133,9 +137,9 @@
                                     <template x-for="star in 5" :key="star">
                                         <button @click.prevent="rating = star" @mouseenter="hoverRating = star"
                                             @mouseleave="hoverRating = 0" class="text-gray-300 transition" :class="{
-                                                                                'text-yellow-400': hoverRating >= star,
-                                                                                'text-yellow-500': rating >= star && hoverRating === 0
-                                                                            }">
+                                                                                                'text-yellow-400': hoverRating >= star,
+                                                                                                'text-yellow-500': rating >= star && hoverRating === 0
+                                                                                            }">
                                             <x-heroicon-s-star class="w-8 h-8" />
                                         </button>
                                     </template>

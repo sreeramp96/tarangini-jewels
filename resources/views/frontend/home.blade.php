@@ -1,6 +1,6 @@
 @use('Illuminate\Support\Facades\Storage')
 @extends('layouts.frontend')
-
+{{-- @php $media = $product->getFirstMedia('images'); @endphp --}}
 @section('content')
 
     <section class="relative flex items-center justify-start px-6 lg:px-20 min-h-[70vh] lg:min-h-[80vh] overflow-hidden">
@@ -28,17 +28,19 @@
             </div>
         </div>
 
-        <div class="relative z-10 lg:w-1/2 max-w-xl text-white">
-            <h2 class="text-4xl lg:text-6xl font-bold hero-text gold-gradient mb-6 leading-tight">
-                Elegance Redefined<br>in Every Jewel
-            </h2>
-            <p class="text-lg text-gray-200 mb-8 leading-relaxed">
-                Discover handcrafted luxury with a touch of divine grace. Every piece at <span
-                    class="text-brand-gold font-semibold">Tarangini</span>
+<div class="relative z-10 lg:w-1/2 max-w-xl text-white drop-shadow-text-readable px-4">
+        <h2 class="text-4xl lg:text-6xl font-bold hero-text mb-6 leading-tight">
+            <span class="text-text-gold-gradient">Elegance Redefined</span><br>in Every Jewel
+        </h2>
+        <p class="text-lg text-gray-100 mb-8 leading-relaxed font-medium">
+            Discover handcrafted luxury with a touch of divine grace. Every piece at
+            <span class="text-brand-gold font-bold">Tarangini</span>
                 embodies timeless beauty and artistry.
-            </p>
-            <a href="#featured-products" class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block">Explore
-                Collection</a>
+        </p>
+
+        <a href="#featured-products" class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block border-2 border-transparent hover:border-white">
+            Explore Collection
+        </a>
         </div>
 
     </section>
@@ -135,88 +137,43 @@
     </section>
 
     <section id="testimonials" class="bg-[#0b3d2e] px-6 lg:px-20 py-20">
-        <h3 class="text-3xl lg:text-4xl font-semibold text-center gold-gradient mb-12 hero-text">
+    <h3 class="text-3xl lg:text-4xl font-semibold text-center text-gold-gradient mb-12 hero-text">
             Words of Radiance
         </h3>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div
-                class="relative flex flex-col bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl p-8 text-center glow-hover transition">
+        @forelse($reviews as $review)
+            <div class="relative flex flex-col bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl p-8 text-center glow-hover transition h-full">
                 <x-heroicon-s-chat-bubble-left-right class="absolute top-4 left-4 w-12 h-12 text-[#d4af37]/10" />
-
-                <p class="text-gray-300 italic leading-loose mb-6 z-10 relative flex-grow">
-                    "The craftsmanship is breathtaking. My necklace is more than jewelry; it's a piece of art that I will
-                    cherish forever. The attention to detail is simply unparalleled."
-                </p>
-
-                <div class="flex justify-center items-center space-x-1 mb-4">
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                </div>
-
-                <h4 class="font-semibold hero-text text-[#d4af37] text-lg">
-                    Priya Sharma
-                </h4>
-                <p class="text-gray-400 text-sm mt-1">
-                    Mumbai, Maharashtra
-                </p>
-            </div>
-            <div
-                class="relative flex flex-col bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl p-8 text-center glow-hover transition">
-                <x-heroicon-s-chat-bubble-left-right class="absolute top-4 left-4 w-12 h-12 text-[#d4af37]/10" />
-
-                <p class="text-gray-300 italic leading-loose mb-6 z-10 relative flex-grow">
-                    "I ordered a ring for our anniversary, and the service was as brilliant as the diamond itself. From
-                    selection to delivery, the experience was seamless and personal."
+                <p class="text-gray-300 leading-loose mb-6 z-10 relative flex-grow">
+                    "{{ Str::limit($review->comment, 150) }}"
                 </p>
                 <div class="flex justify-center items-center space-x-1 mb-4">
+                    @foreach(range(1, 5) as $i)
+                        @if($i <= $review->rating)
                     <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
+                        @else
+                            <x-heroicon-s-star class="w-5 h-5 text-gray-600" />
+                        @endif
+                    @endforeach
                 </div>
-
                 <h4 class="font-semibold hero-text text-[#d4af37] text-lg">
-                    Arjun Nair
+                    {{ $review->user->name ?? 'Guest Customer' }}
                 </h4>
                 <p class="text-gray-400 text-sm mt-1">
-                    Bengaluru, Karnataka
+                    Verified Buyer
                 </p>
             </div>
-
-            <div
-                class="relative flex flex-col bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl p-8 text-center glow-hover transition">
-                <x-heroicon-s-chat-bubble-left-right class="absolute top-4 left-4 w-12 h-12 text-[#d4af37]/10" />
-
-                <p class="text-gray-300 italic leading-loose mb-6 z-10 relative flex-grow">
-                    "Tarangini Jewels transformed a family heirloom into a modern masterpiece. They respected the
-                    sentiment while infusing new life into the design. Truly exceptional artists."
-                </p>
-
-                <div class="flex justify-center items-center space-x-1 mb-4">
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
-                </div>
-
-                <h4 class="font-semibold hero-text text-[#d4af37] text-lg">
-                    Ananya Reddy
-                </h4>
-                <p class="text-gray-400 text-sm mt-1">
-                    Hyderabad, Telangana
-                </p>
+        @empty
+            <div class="col-span-3 text-center text-gray-400 py-10">
+                <p>Be the first to share your radiance!</p>
             </div>
-
+        @endforelse
         </div>
     </section>
 
     <section id="about" class="bg-[#0b3d2e] px-6 lg:px-20 py-20 text-center hero-text">
-        <h3 class="text-3xl lg:text-4xl font-semibold gold-gradient mb-6">About Tarangini</h3>
+        <h3 class="text-3xl lg:text-4xl font-semibold text-gold-gradient mb-6">About Tarangini</h3>
         <p class="max-w-2xl mx-auto text-gray-300 leading-relaxed">
             At Tarangini Jewels, we blend ancient craftsmanship with modern elegance.
             Every piece narrates a story — inspired by Indian heritage, shaped with care, and perfected to shine for

@@ -4,15 +4,15 @@
         <a href="{{ url('/') }}" class="flex items-center space-x-2 flex-shrink-0">
             <img src="{{ asset('images/logo.png') }}" alt="Tarangini Jewels Logo"
                 class="h-10 lg:h-12 w-auto object-contain">
-            <span class="text-xl lg:text-3xl font-bold hero-text gold-gradient hidden md:block">
+            <span class="text-xl lg:text-3xl font-bold hero-text hidden md:block text-gold-gradient">
                 Tarangini Jewels
             </span>
         </a>
 
-        <nav class="hidden md:flex items-center space-x-8 text-md font-medium">
+        <nav class="hidden md:flex items-center space-x-8 text-md font-medium text-gold-gradient">
             <a href="{{ route('home') }}" ...>Home</a>
             <div class="relative group" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                <button class="flex items-center text-gray-200 hover:text-brand-gold transition focus:outline-none">
+                <button class="flex items-center text-gold-gradient hover:text-brand-gold transition focus:outline-none">
                     <span>Collections</span>
                     <x-heroicon-s-chevron-down class="w-4 h-4 ml-1" />
                 </button>
@@ -34,8 +34,8 @@
                     @endforeach
                 </div>
             </div>
-            <a href="{{ url('/#about') }}" class="text-gray-200 hover:text-brand-gold transition">About</a>
-            <a href="{{ url('/#contact') }}" class="text-gray-200 hover:text-brand-gold transition">Contact</a>
+            <a href="{{ url('/#about') }}" class="text-gold-gradient hover:text-brand-gold transition">About</a>
+            <a href="{{ url('/#contact') }}" class="text-gold-gradient hover:text-brand-gold transition">Contact</a>
         </nav>
 
         <div class="flex items-center space-x-5 lg:space-x-6">

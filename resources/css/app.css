@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    /* Custom Font Classes */
+    .hero-text {
+        @apply font-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+    }
+
+    /* The Gold Gradient Text Effect */
+    .text-gold-gradient {
+        @apply bg-gold-gradient bg-[length:200%_auto] animate-shimmer bg-clip-text text-transparent;
+    }
+
+    /* Hover Glow Effect */
+    .glow-hover {
+        @apply transition-transform duration-300;
+    }
+    .glow-hover:hover {
+        @apply shadow-glow -translate-y-1;
+    }
+}
+
+@layer components {
+    /* Button Styles */
+    .btn-gold {
+        @apply bg-brand-gold text-brand-green-dark transition-all duration-300 ease-in-out hover:bg-[#f1cf73] hover:shadow-glow;
+    }
+
+    .btn-dark {
+        @apply bg-gray-900 text-white transition-all duration-300 ease-in-out hover:bg-black hover:shadow-lg;
+    }
+
+    .btn-red {
+        @apply bg-red-600 text-white transition-all duration-300 ease-in-out hover:bg-red-700 hover:shadow-lg;
+    }
+}

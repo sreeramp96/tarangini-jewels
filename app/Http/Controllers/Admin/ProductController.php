@@ -62,16 +62,14 @@ class ProductController extends Controller
 
         if ($request->hasFile('images')) {
             $isPrimary = true;
-            foreach ($request->file('images') as $index => $image) {
+
+            foreach ($request->file('images') as $image) {
                 $extension = $image->getClientOriginalExtension();
                 $filename = $product->slug . '-' . $product->id . '-' . uniqid() . '.' . $extension;
-                $path = $image->storeAs('products', $filename, 's3');
-
-                $product->images()->create([
-                    'image_path' => $path,
-                    'is_primary' => $isPrimary,
-                ]);
-
+                $product->addMedia($image)
+                    ->usingFileName($filename)
+                    ->withCustomProperties(['primary' => $isPrimary])
+                    ->toMediaCollection('products', 's3');
                 $isPrimary = false;
             }
         }
@@ -148,7 +146,6 @@ class ProductController extends Controller
             $failures = $e->failures();
             Log::error('Import Validation Failed: ', $failures);
             return back()->withErrors(['import_file' => 'Import failed. Check logs for details.']);
-
         } catch (\Exception $e) {
             Log::error('Product Import Failed: ' . $e->getMessage());
             return back()->withErrors(['import_file' => 'An error occurred during import. Please check the file format and data.']);
