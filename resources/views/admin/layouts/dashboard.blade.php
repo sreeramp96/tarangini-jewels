@@ -4,23 +4,23 @@
     <h1 class="text-3xl font-semibold text-gray-200 mb-6 hero-text">Admin Dashboard</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 hero-text ">
 
-        <div class="bg-[#0d4837] border border-[#d4af37]/40 p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-bold hero-text text-[#d4af37]">Total Products</h2>
+        <div class="bg-[#0d4837] border border-brand-gold/40 p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold hero-text text-brand-gold">Total Products</h2>
             <p class="text-3xl text-white font-semibold mt-2">{{ $productCount }}</p>
         </div>
 
-        <div class="bg-[#0d4837] border border-[#d4af37]/40 p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-bold hero-text text-[#d4af37]">Total Categories</h2>
+        <div class="bg-[#0d4837] border border-brand-gold/40 p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold hero-text text-brand-gold">Total Categories</h2>
             <p class="text-3xl text-white font-semibold mt-2">{{ $categoryCount }}</p>
         </div>
 
-        <div class="bg-[#0d4837] border border-[#d4af37]/40 p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-bold hero-text text-[#d4af37]">Pending Orders</h2>
+        <div class="bg-[#0d4837] border border-brand-gold/40 p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold hero-text text-brand-gold">Pending Orders</h2>
             <p class="text-3xl text-white font-semibold mt-2">{{ $pendingOrderCount }}</p>
         </div>
 
-        <div class="bg-[#0d4837] border border-[#d4af37]/40 p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-bold hero-text text-[#d4af37]">Total Customers</h2>
+        <div class="bg-[#0d4837] border border-brand-gold/40 p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold hero-text text-brand-gold">Total Customers</h2>
             <p class="text-3xl text-white font-semibold mt-2">{{ $customerCount }}</p>
         </div>
     </div>
@@ -28,7 +28,7 @@
     <div class="mt-12 hero-text">
         <h2 class="text-2xl font-semibold text-gray-200 mb-4 hero-text">Recent Orders</h2>
 
-        <div class="bg-[#0d4837] border border-[#d4af37]/40 rounded-lg shadow-md overflow-hidden">
+        <div class="bg-[#0d4837] border border-brand-gold/40 rounded-lg shadow-md overflow-hidden">
             <table class="w-full text-left">
                 <thead class="bg-[#0a2e2b] text-gray-300 uppercase text-sm">
                     <tr>
@@ -41,7 +41,7 @@
                 <tbody class="text-gray-200">
 
                     @forelse($recentOrders as $order)
-                        <tr class="border-b border-[#d4af37]/20 hover:bg-[#0d4837]/60">
+                        <tr class="border-b border-brand-gold/20 hover:bg-[#0d4837]/60">
                             <td class="px-6 py-4 font-medium">#{{ $order->id }}</td>
                             <td class="px-6 py-4">{{ $order->user->name ?? 'Guest' }}</td>
                             <td class="px-6 py-4">

@@ -4,12 +4,12 @@
     <h1 class="text-3xl font-semibold text-gray-200 hero-text mb-6">Orders</h1>
 
     @if(session('success'))
-        <div class="bg-green-800/50 border border-green-600 text-green-300 px-4 py-3 rounded relative mb-4" role="alert">
+        <div class="bg-green-800/50 border border-green-600 text-green-300 px-4 py-3 rounded-sm relative mb-4" role="alert">
             {{ session('success') }}
         </div>
     @endif
 
-    <div class="bg-[#0d4837] border border-[#d4af37]/40 rounded-lg shadow-md overflow-hidden">
+    <div class="bg-[#0d4837] border border-brand-gold/40 rounded-lg shadow-md overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left min-w-[800px]">
                 <thead class="bg-[#0a2e2b] text-gray-300 uppercase text-sm">
@@ -24,7 +24,7 @@
                 </thead>
                 <tbody class="text-gray-200">
                     @forelse($orders as $order)
-                        <tr class="border-b border-[#d4af37]/20 hover:bg-[#0d4837]/60">
+                        <tr class="border-b border-brand-gold/20 hover:bg-[#0d4837]/60">
                             <td class="px-6 py-4 font-medium">{{ $order->order_number }}</td>
                             <td class="px-6 py-4">{{ $order->user->name }}</td>
                             <td class="px-6 py-4">

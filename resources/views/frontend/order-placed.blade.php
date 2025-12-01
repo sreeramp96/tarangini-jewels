@@ -8,7 +8,7 @@
         <p class="text-lg text-gray-600 mb-8">
             Your order has been placed successfully. You will receive an email confirmation shortly.
         </p>
-        <a href="{{ route('home') }}" class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block">
+        <a href="{{ route('home') }}" class="btn-gold px-8 py-3 rounded-sm font-semibold text-lg inline-block">
             Continue Shopping
         </a>
     </div>

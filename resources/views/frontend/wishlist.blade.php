@@ -7,14 +7,14 @@
             <h1 class="text-3xl lg:text-4xl font-bold hero-text text-gray-800 mb-8 text-center">My Wishlist</h1>
 
             @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-sm relative mb-6" role="alert">
                     {{ session('success') }}
                 </div>
             @endif
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 @forelse($wishlistedProducts as $product)
-                    <div class="bg-white rounded-lg shadow overflow-hidden group relative">
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden group relative">
                         <a href="{{ route('products.show', $product->slug) }}" class="block">
                             <div class="relative overflow-hidden">
                                 <img src="{{ $product->images->isNotEmpty() ? (Str::startsWith($product->images->first()->image_path, 'http') ? $product->images->first()->image_path : Storage::url($product->images->first()->image_path)) : asset('images/necklace.jpg') }}"
@@ -41,7 +41,7 @@
                             @csrf
                             @method('DELETE')
                             <button typea="submit"
-                                class="bg-white p-1.5 rounded-full shadow text-red-500 hover:bg-red-50 transition"
+                                class="bg-white p-1.5 rounded-full shadow-sm text-red-500 hover:bg-red-50 transition"
                                 title="Remove from Wishlist">
                                 <x-heroicon-s-heart class="w-5 h-5" />
                             </button>

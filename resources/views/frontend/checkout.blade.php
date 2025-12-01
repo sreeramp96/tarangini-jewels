@@ -64,13 +64,13 @@
                             <div class="space-y-4 max-h-64 overflow-y-auto border-b border-gray-200 pb-4">
                                 @foreach($cartItems as $item)
                                     <div class="flex items-center space-x-4">
-                                        <div class="relative flex-shrink-0">
+                                        <div class="relative shrink-0">
                                             <img src="{{ $item->image ? (Str::startsWith($item->image, 'http') ? $item->image : asset('images/products/' . $item->image)) : asset('images/necklace.jpg') }}"
                                                 alt="{{ $item->name }}" class="w-16 h-16 object-cover rounded-md border">
                                             <span
                                                 class="absolute -top-2 -right-2 bg-gray-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">{{ $item->quantity }}</span>
                                         </div>
-                                        <div class="flex-grow">
+                                        <div class="grow">
                                             <p class="font-medium text-gray-800 hero-text">{{ $item->name }}</p>
                                         </div>
                                         <div class="text-gray-700 font-semibold">
@@ -109,7 +109,7 @@
                             </div>
 
                             <button type="submit"
-                                class="mt-6 w-full btn-gold px-8 py-3 rounded font-semibold text-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
+                                class="mt-6 w-full btn-gold px-8 py-3 rounded-sm font-semibold text-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
                                 Place Order
                             </button>
                         </div>

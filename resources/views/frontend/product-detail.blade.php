@@ -14,7 +14,7 @@
         }">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
                 <div>
-                    <div class="border border-[#d4af37]/40 rounded-2xl p-2 mb-4">
+                    <div class="border border-brand-gold/40 rounded-2xl p-2 mb-4">
                         <img :src="primaryImage" alt="{{ $product->name }}"
                             class="w-full h-[500px] object-cover rounded-xl">
                     </div>
@@ -22,8 +22,8 @@
                     <div class="flex space-x-4 overflow-x-auto pb-2">
                         <template x-for="image in images" :key="image">
                             <button @click="primaryImage = image"
-                                class="flex-shrink-0 w-24 h-24 border-2 rounded-lg p-1 transition :class="
-                                primaryImage===image ? 'border-[#d4af37]'
+                                class="shrink-0 w-24 h-24 border-2 rounded-lg p-1 transition :class="
+                                primaryImage===image ? 'border-brand-gold'
                                 : 'border-transparent opacity-60 hover:opacity-100'"> <img :src=" image" alt="Thumbnail"
                                 class="w-full h-full object-cover rounded-md">
                             </button>
@@ -59,11 +59,11 @@
                                 <div class="w-24">
                                     <label for="quantity" class="sr-only">Quantity</label>
                                     <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}"
-                                        class="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-gold text-center">
+                                        class="w-full px-3 py-3 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-brand-gold text-center">
                                 </div>
 
                                 <button type="submit"
-                                    class="flex-grow btn-gold px-8 py-4 rounded font-semibold text-lg flex justify-center items-center"
+                                    class="grow btn-gold px-8 py-4 rounded-sm font-semibold text-lg flex justify-center items-center"
                                     :disabled="loading || {{ $product->stock <= 0 ? 'true' : 'false' }}"
                                     :class="{ 'opacity-75 cursor-not-allowed': loading }">
 
@@ -80,8 +80,8 @@
                                         x-text="loading ? 'Adding...' : '{{ $product->stock > 0 ? 'Add to Cart' : 'Out of Stock' }}'"></span>
                                 </button>
 
-                                <button type="button" class="p-4 border border-[#d4af37]/40 rounded glow-hover">
-                                    <x-heroicon-o-heart class="w-6 h-6 text-[#d4af37]" />
+                                <button type="button" class="p-4 border border-brand-gold/40 rounded-sm glow-hover">
+                                    <x-heroicon-o-heart class="w-6 h-6 text-brand-gold" />
                                 </button>
                             </div>
                         </form>
@@ -95,12 +95,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 @foreach($relatedProducts as $relatedProduct)
                     <div
-                        class="bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl overflow-hidden shadow-lg glow-hover transition p-2">
+                        class="bg-[#0b3d2e]/70 border border-brand-gold/40 rounded-2xl overflow-hidden shadow-lg glow-hover transition p-2">
                         <a href="{{ route('products.show', $relatedProduct->slug) }}">
                             <img src="{{ $relatedProduct->primary_image_url }}" alt="{{ $relatedProduct->name }}"
                                 class="w-full h-64 object-cover rounded-xl">
                             <div class="p-5 hero-text">
-                                <h4 class="text-xl font-medium text-[#d4af37] truncate">{{ $relatedProduct->name }}</h4>
+                                <h4 class="text-xl font-medium text-brand-gold truncate">{{ $relatedProduct->name }}</h4>
                                 <p class="text-gray-300 text-sm mt-2">
                                     @if($relatedProduct->discount_price)
                                         <span
@@ -151,11 +151,11 @@
                             <div class="mb-4">
                                 <x-input-label for="comment" :value="__('Your Comment')" />
                                 <textarea id="comment" name="comment" rows="4"
-                                    class="block w-full mt-1 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md shadow-sm">{{ old('comment') }}</textarea>
+                                    class="block w-full mt-1 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md shadow-xs">{{ old('comment') }}</textarea>
                                 <x-input-error :messages="$errors->get('comment')" class="mt-2" />
                             </div>
 
-                            <button type="submit" class="btn-gold px-6 py-2 rounded font-medium">Submit Review</button>
+                            <button type="submit" class="btn-gold px-6 py-2 rounded-sm font-medium">Submit Review</button>
                         </form>
                     @else
                         <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center">

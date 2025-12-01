@@ -9,15 +9,15 @@
                 </p>
                 <div class="space-y-3 text-gray-300">
                     <p class="flex items-center hover:text-brand-gold transition-colors">
-                        <x-heroicon-o-phone class="w-5 h-5 mr-3 flex-shrink-0 text-brand-gold" />
+                        <x-heroicon-o-phone class="w-5 h-5 mr-3 shrink-0 text-brand-gold" />
                         <span>+91 987 654 3210</span>
                     </p>
                     <p class="flex items-center hover:text-brand-gold transition-colors">
-                        <x-heroicon-o-envelope class="w-5 h-5 mr-3 flex-shrink-0 text-brand-gold" />
+                        <x-heroicon-o-envelope class="w-5 h-5 mr-3 shrink-0 text-brand-gold" />
                         <span>info@tarangini.com</span>
                     </p>
                     <p class="flex items-center hover:text-brand-gold transition-colors">
-                        <x-heroicon-o-map-pin class="w-5 h-5 mr-3 flex-shrink-0 text-brand-gold" />
+                        <x-heroicon-o-map-pin class="w-5 h-5 mr-3 shrink-0 text-brand-gold" />
                         <span>123 Jewel Street, Gold City</span>
                     </p>
                 </div>

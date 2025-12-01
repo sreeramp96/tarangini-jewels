@@ -7,19 +7,19 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="p-4 sm:p-8 bg-white shadow-sm sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('profile.partials.update-profile-information-form')
                 </div>
             </div>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="p-4 sm:p-8 bg-white shadow-sm sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('profile.partials.update-password-form')
                 </div>
             </div>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="p-4 sm:p-8 bg-white shadow-sm sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('profile.partials.delete-user-form')
                 </div>
@@ -30,7 +30,7 @@
 @extends('layouts.frontend')
 
 @section('content')
-    <main class="flex-grow flex flex-col justify-center items-center w-full p-8" style="background-color: #0a2e2b;">
+    <main class="grow flex flex-col justify-center items-center w-full p-8" style="background-color: #0a2e2b;">
         <div class="w-full max-w-4xl space-y-8">
             <div class="p-8 shadow-xl rounded-lg" style="background-color: #f8f8f5;">
                 <section>
@@ -62,7 +62,7 @@
 
                         <div class="flex items-center gap-4">
                             <button type="submit"
-                                class="px-6 py-2 rounded text-white font-medium btn-gold glow-hover">Save</button>
+                                class="px-6 py-2 rounded-sm text-white font-medium btn-gold glow-hover">Save</button>
                         </div>
                     </form>
                 </section>

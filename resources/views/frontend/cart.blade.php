@@ -16,7 +16,7 @@
             <div x-show="itemCount === 0" style="display: none;" class="text-center bg-white p-12 rounded-lg shadow-md">
                 <x-heroicon-o-shopping-bag class="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <p class="text-xl text-gray-600 mb-6">Your cart is currently empty.</p>
-                <a href="{{ route('home') }}" class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block">
+                <a href="{{ route('home') }}" class="btn-gold px-8 py-3 rounded-sm font-semibold text-lg inline-block">
                     Continue Shopping
                 </a>
             </div>
@@ -43,7 +43,7 @@
                                 x-transition:leave-start="opacity-100 transform scale-100"
                                 x-transition:leave-end="opacity-0 transform scale-95">
                                 <div class="col-span-1 md:col-span-6 flex items-center space-x-4">
-                                    <a href="{{ route('products.show', $item->slug) }}" class="flex-shrink-0">
+                                    <a href="{{ route('products.show', $item->slug) }}" class="shrink-0">
                                         <img src="{{ $item->image ? (Str::startsWith($item->image, 'http') ? $item->image : Storage::url($item->image)) : asset('images/necklace.jpg') }}"
                                             alt="{{ $item->name }}"
                                             class="w-20 h-20 object-cover rounded-lg border border-gray-200">

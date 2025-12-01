@@ -19,7 +19,7 @@
                 <div class="lg:col-span-3">
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         @forelse($products as $product)
-                            <div class="bg-white rounded-lg shadow overflow-hidden group relative border border-gray-100">
+                            <div class="bg-white rounded-lg shadow-sm overflow-hidden group relative border border-gray-100">
                                 <a href="{{ route('products.show', $product->slug) }}" class="block">
                                     <div class="relative overflow-hidden">
                                         <img src="{{ $product->primary_image_url }}"
@@ -28,10 +28,10 @@
 
                                         <div class="absolute top-2 left-2 flex flex-col space-y-1">
                                             @if($product->discount_price)
-                                                <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase">Sale</span>
+                                                <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase">Sale</span>
                                             @endif
                                             @if($product->stock <= 0)
-                                                <span class="bg-gray-800 text-white text-[10px] font-bold px-2 py-1 rounded uppercase">Sold Out</span>
+                                                <span class="bg-gray-800 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase">Sold Out</span>
                                             @endif
                                         </div>
                                     </div>
@@ -39,7 +39,7 @@
 
                                 <form action="{{ route('wishlist.add', $product->id) }}" method="POST" class="absolute top-2 right-2 z-10">
                                     @csrf
-                                    <button type="submit" class="bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition" title="Add to Wishlist">
+                                    <button type="submit" class="bg-white p-1.5 rounded-full shadow-sm text-gray-400 hover:text-red-500 transition" title="Add to Wishlist">
                                         <x-heroicon-o-heart class="w-5 h-5" />
                                     </button>
                                 </form>
@@ -65,7 +65,7 @@
                                     <form x-data="addToCartForm" @submit.prevent="submit" action="{{ route('cart.store', $product->id) }}" method="POST" class="mt-3">
                                         <input type="hidden" name="quantity" value="1">
                                         <button type="submit"
-                                                class="w-full btn-dark px-4 py-2 text-sm rounded glow-hover flex justify-center items-center"
+                                                class="w-full btn-dark px-4 py-2 text-sm rounded-sm glow-hover flex justify-center items-center"
                                                 :disabled="loading || {{ $product->stock <= 0 ? 'true' : 'false' }}"
                                                 :class="{ 'opacity-75 cursor-not-allowed': loading }">
                                             <span x-show="!loading">{{ $product->stock > 0 ? 'Add to Cart' : 'Out of Stock' }}</span>

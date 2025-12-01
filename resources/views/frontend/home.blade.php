@@ -38,7 +38,7 @@
                 embodies timeless beauty and artistry.
         </p>
 
-        <a href="#featured-products" class="btn-gold px-8 py-3 rounded font-semibold text-lg inline-block border-2 border-transparent hover:border-white">
+        <a href="#featured-products" class="btn-gold px-8 py-3 rounded-sm font-semibold text-lg inline-block border-2 border-transparent hover:border-white">
             Explore Collection
         </a>
         </div>
@@ -80,7 +80,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             @forelse($featuredProducts as $product)
-                <div class="bg-white rounded-lg shadow overflow-hidden group relative">
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden group relative">
                     <a href="{{ route('products.show', $product->slug) }}" class="block">
                         <div class="relative overflow-hidden">
                             <img src="{{ $product->primary_image_url }}"
@@ -104,7 +104,7 @@
                                 class="absolute top-2 right-2 z-10">
                                 @csrf
                                 <button type="submit"
-                                    class="bg-white p-1.5 rounded-full shadow text-gray-400 hover:text-red-500 transition"
+                                    class="bg-white p-1.5 rounded-full shadow-sm text-gray-400 hover:text-red-500 transition"
                                     title="Add to Wishlist">
                                     <x-heroicon-o-heart class="w-5 h-5" />
                                 </button>
@@ -125,7 +125,7 @@
                                     <span class="font-semibold text-gray-800">₹{{ number_format($product->price, 0) }}</span>
                                 @endif
                             </p>
-                            <button class="mt-3 w-full btn-dark px-4 py-2 text-sm rounded btn-gold glow-hover">Add to
+                            <button class="mt-3 w-full btn-dark px-4 py-2 text-sm rounded-sm btn-gold glow-hover">Add to
                                 Cart</button>
                         </div>
                     </a>
@@ -143,21 +143,21 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse($reviews as $review)
-            <div class="relative flex flex-col bg-[#0b3d2e]/70 border border-[#d4af37]/40 rounded-2xl p-8 text-center glow-hover transition h-full">
-                <x-heroicon-s-chat-bubble-left-right class="absolute top-4 left-4 w-12 h-12 text-[#d4af37]/10" />
-                <p class="text-gray-300 leading-loose mb-6 z-10 relative flex-grow">
+            <div class="relative flex flex-col bg-[#0b3d2e]/70 border border-brand-gold/40 rounded-2xl p-8 text-center glow-hover transition h-full">
+                <x-heroicon-s-chat-bubble-left-right class="absolute top-4 left-4 w-12 h-12 text-brand-gold/10" />
+                <p class="text-gray-300 leading-loose mb-6 z-10 relative grow">
                     "{{ Str::limit($review->comment, 150) }}"
                 </p>
                 <div class="flex justify-center items-center space-x-1 mb-4">
                     @foreach(range(1, 5) as $i)
                         @if($i <= $review->rating)
-                    <x-heroicon-s-star class="w-5 h-5 text-[#d4af37]" />
+                    <x-heroicon-s-star class="w-5 h-5 text-brand-gold" />
                         @else
                             <x-heroicon-s-star class="w-5 h-5 text-gray-600" />
                         @endif
                     @endforeach
                 </div>
-                <h4 class="font-semibold hero-text text-[#d4af37] text-lg">
+                <h4 class="font-semibold hero-text text-brand-gold text-lg">
                     {{ $review->user->name ?? 'Guest Customer' }}
                 </h4>
                 <p class="text-gray-400 text-sm mt-1">

@@ -18,7 +18,7 @@
 {{-- Use the brand color class we defined --}}
 <body class="flex flex-col min-h-screen bg-white serif antialiased">
     @include('frontend.partials.navbar')
-    <main class="flex-grow">
+    <main class="grow">
         @yield('content')
     </main>
 

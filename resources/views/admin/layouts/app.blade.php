@@ -78,7 +78,7 @@
                     Tarangini Admin
                 </h1>
                 <button @click="sidebarOpen = !sidebarOpen"
-                    class="text-gray-400 hover:text-white focus:outline-none p-1 rounded">
+                    class="text-gray-400 hover:text-white focus:outline-hidden p-1 rounded-sm">
                     <span x-show="sidebarOpen">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6">
@@ -98,28 +98,28 @@
 
             <nav class="flex flex-col space-y-2">
                 <a href="{{ route('admin.dashboard') }}"
-                    class="flex items-center px-4 py-2 rounded hover:bg-[#0d4837] transition group">
-                    <x-heroicon-o-home class="w-6 h-6 flex-shrink-0" />
+                    class="flex items-center px-4 py-2 rounded-sm hover:bg-[#0d4837] transition group">
+                    <x-heroicon-o-home class="w-6 h-6 shrink-0" />
                     <span class="ml-3 overflow-hidden whitespace-nowrap"
                         :class="sidebarOpen ? 'opacity-100' : 'opacity-0 w-0'"
                         x-transition:enter="transition ease-out duration-200"
                         x-transition:leave="transition ease-in duration-100">Dashboard</span>
                 </a>
                 <a href="{{ route('admin.products.index') }}"
-                    class="flex items-center px-4 py-2 rounded hover:bg-[#0d4837] transition group">
-                    <x-heroicon-o-building-storefront class="w-6 h-6 flex-shrink-0" />
+                    class="flex items-center px-4 py-2 rounded-sm hover:bg-[#0d4837] transition group">
+                    <x-heroicon-o-building-storefront class="w-6 h-6 shrink-0" />
                     <span class="ml-3 overflow-hidden whitespace-nowrap"
                         :class="sidebarOpen ? 'opacity-100' : 'opacity-0 w-0'" x-transition>Products</span>
                 </a>
                 <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center px-4 py-2 rounded hover:bg-[#0d4837] transition group">
-                    <x-heroicon-o-tag class="w-6 h-6 flex-shrink-0" />
+                    class="flex items-center px-4 py-2 rounded-sm hover:bg-[#0d4837] transition group">
+                    <x-heroicon-o-tag class="w-6 h-6 shrink-0" />
                     <span class="ml-3 overflow-hidden whitespace-nowrap"
                         :class="sidebarOpen ? 'opacity-100' : 'opacity-0 w-0'" x-transition>Categories</span>
                 </a>
                 <a href="{{ route('admin.orders.index') }}"
-                    class="flex items-center px-4 py-2 rounded hover:bg-[#0d4837] transition group">
-                    <x-heroicon-o-shopping-cart class="w-6 h-6 flex-shrink-0" />
+                    class="flex items-center px-4 py-2 rounded-sm hover:bg-[#0d4837] transition group">
+                    <x-heroicon-o-shopping-cart class="w-6 h-6 shrink-0" />
                     <span class="ml-3 overflow-hidden whitespace-nowrap"
                         :class="sidebarOpen ? 'opacity-100' : 'opacity-0 w-0'" x-transition>Orders</span>
                 </a>
@@ -128,15 +128,15 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();"
-                        class="flex items-center px-4 py-2 rounded text-red-400 hover:bg-red-900/50 hover:text-red-300 transition group">
-                        <x-heroicon-o-arrow-left-on-rectangle class="w-6 h-6 flex-shrink-0" />
+                        class="flex items-center px-4 py-2 rounded-sm text-red-400 hover:bg-red-900/50 hover:text-red-300 transition group">
+                        <x-heroicon-o-arrow-left-on-rectangle class="w-6 h-6 shrink-0" />
                         <span class="ml-3 overflow-hidden whitespace-nowrap"
                             :class="sidebarOpen ? 'opacity-100' : 'opacity-0 w-0'" x-transition>Log Out</span>
                     </a>
                 </form>
             </nav>
         </aside>
-        <main class="flex-grow p-8 transition-all duration-300 ease-in-out">
+        <main class="grow p-8 transition-all duration-300 ease-in-out">
             @yield('content')
         </main>
     </div>
