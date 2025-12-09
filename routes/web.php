@@ -61,4 +61,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('orders', OrderController::class)->only(['index', 'show', 'update']);
 });
 
+Route::get('/add-product', function () {
+    return view('admin.products.createcopy', ['title' => 'Add Product']);
+})->name('add-product');
+
 require __DIR__ . '/auth.php';

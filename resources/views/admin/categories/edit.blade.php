@@ -1,5 +1,5 @@
 @use('Illuminate\Support\Facades\Storage')
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('content')
     <h1 class="text-3xl font-semibold text-gray-200 hero-text mb-6">Edit Category: {{ $category->name }}</h1>

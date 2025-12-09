@@ -1,5 +1,5 @@
 @use('Illuminate\Support\Facades\Storage')
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('content')
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
