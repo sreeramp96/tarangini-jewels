@@ -21,7 +21,7 @@ class DashboardController extends Controller
         $customerCount = User::where('is_admin', false)->count();
         $recentOrders = Order::with('user')->latest()->take(5)->get();
 
-        return view('admin.ecommerce', compact(
+        return view('admin.dashboard', compact(
             'productCount',
             'categoryCount',
             'pendingOrderCount',
