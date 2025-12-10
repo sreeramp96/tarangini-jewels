@@ -33,16 +33,22 @@
                     <p class="text-sm text-black dark:text-white">₹{{ number_format($product->price) }}</p>
                 </td>
                 <td class="py-4 px-4">
-                    <span class="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium {{ $product->stock < 5 ? 'bg-danger text-danger' : 'bg-success text-success' }}">
+                    <span
+                        class="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium {{ $product->stock < 5 ? 'bg-danger text-danger' : 'bg-success text-success' }}">
                         {{ $product->stock }}
                     </span>
                 </td>
                 <td class="py-4 px-4">
                     <div class="flex items-center justify-end space-x-3.5">
-                        <a href="{{ route('admin.products.edit', $product) }}" class="hover:text-primary"><x-bi-pencil class="w-5 h-5"/></a>
-                        <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline-block" onsubmit="return confirm('Delete?');">
+                        <a href="{{ route('admin.products.edit', $product) }}" class="hover:text-primary">
+                            <x-bi-pencil class="w-5 h-5 text-primary"/>
+                        </a>
+                        <form action="{{ route('admin.products.destroy', $product) }}" method="POST"
+                              class="inline-block" onsubmit="return confirm('Delete?');">
                             @csrf @method('DELETE')
-                            <button type="submit" class="hover:text-danger"><x-bi-trash class="w-5 h-5"/></button>
+                            <button type="submit" class="hover:text-danger">
+                                <x-bi-trash class="w-5 h-5"/>
+                            </button>
                         </form>
                     </div>
                 </td>
