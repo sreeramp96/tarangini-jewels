@@ -48,7 +48,7 @@ class ImportProductImagesSeeder extends Seeder
                     $product->addMedia($path)
                         ->preservingOriginal()
                         ->withCustomProperties(['primary' => $isPrimary])
-                        ->toMediaCollection('images', 's3');
+                        ->toMediaCollection('products', 's3');
                 }
             }
             $this->command->info("Processed Product {$product->id}");

@@ -29,6 +29,8 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 
+use Filament\Tables\Columns\ImageColumn;
+
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
@@ -39,14 +41,12 @@ class ProductResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        // return ProductForm::configure($schema);
         return $schema->schema([
             Section::make('Product Details')->schema([
                 TextInput::make('name')
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (string $operation, $state, $set) {
-                        // when creating, set slug from name
                         if ($operation === 'create') {
                             $set('slug', Str::slug($state));
                         }
@@ -95,12 +95,14 @@ class ProductResource extends Resource
 
     public static function table(Table $table): Table
     {
-        // return ProductsTable::configure($table);
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make('images') // shows the collection images
-                    ->collection('images')
-                    ->disk('s3'),
+                ImageColumn::make('primary_image_url')
+                    ->label('Image')
+                    ->getStateUsing(fn($record) => $record->primary_image_url)
+                    ->rounded()
+                    ->toggleable(false)  // optional
+                    ->extraAttributes(['class' => 'w-24 h-24 object-cover']),
 
                 TextColumn::make('name')
                     ->searchable()
