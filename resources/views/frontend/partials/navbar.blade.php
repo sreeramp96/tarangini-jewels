@@ -1,10 +1,10 @@
-<header class="flex flex-col bg-[#0b3d2e]/90 backdrop-blur-md sticky top-0 z-50 shadow-md">
+<header class="flex flex-col bg-[#0b3d2e]/90 backdrop-blur-md sticky top-0 z-50 shadow-md site-font">
     <div class="flex justify-between items-center w-full px-6 lg:px-20 py-4">
 
         <a href="{{ url('/') }}" class="flex items-center space-x-2 shrink-0">
             <img src="{{ asset('images/logo.png') }}" alt="Tarangini Jewels Logo"
                 class="h-10 lg:h-12 w-auto object-contain">
-            <span class="text-xl lg:text-3xl font-bold hero-text hidden md:block text-gold-gradient">
+            <span class="text-xl lg:text-3xl font-bold site-font hidden md:block text-gold-gradient">
                 Tarangini Jewels
             </span>
         </a>
@@ -74,7 +74,7 @@
                         @else
                             <x-heroicon-o-user-circle class="w-8 h-8" />
                         @endif
-                        <span class="font-medium hero-text hidden md:block">{{ Auth::user()->name }}</span>
+                        <span class="font-medium hidden md:block">{{ Auth::user()->name }}</span>
                         <x-heroicon-s-chevron-down class="w-4 h-4" />
                     </button>
 
