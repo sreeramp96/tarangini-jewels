@@ -1,6 +1,6 @@
 @use('Illuminate\Support\Facades\Storage')
 @extends('layouts.frontend')
-{{-- @php $media = $product->getFirstMedia('images'); @endphp --}}
+
 @section('content')
     @php
         $slides = $heroCarouselProducts->map(function ($product) {
@@ -12,20 +12,18 @@
             ];
         });
     @endphp
-    <x-hero-slider :slides="$slides" />
+    <section class="w-full bg-brand-light overflow-hidden pt-4 pb-0">
+        <x-hero-slider :slides="$slides" />
+    </section>
 
-    <section class="py-16 px-6 text-center bg-[#F7F2EB] site-font">
-        <div class="max-w-3xl mx-auto">
-            <h2 class="text-4xl lg:text-5xl font-bold text-gold-gradient mb-6">
-                Elegance Redefined
-            </h2>
-            <p class="text-gray-600 text-lg leading-relaxed mb-8">
-                Discover handcrafted luxury with a touch of divine grace. Every piece at
-                <span class="font-bold text-[#B48E43]">Tarangini</span>
-                embodies timeless beauty and artistry.
-            </p>
-            <div class="h-1 w-24 bg-[#B48E43] mx-auto rounded-full"></div>
-        </div>
+    <section class="py-12 px-4 text-center bg-brand-light">
+        <h2 class="text-3xl md:text-5xl font-serif font-bold text-brand-dark mb-3">
+            Elegance Redefined
+        </h2>
+        <p class="text-gray-600 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+            Discover handcrafted luxury with a touch of divine grace. Every piece at
+            <span class="font-bold text-[#B48E43]">Tarangini</span> embodies timeless beauty.
+        </p>
     </section>
 
 
@@ -59,18 +57,16 @@
         </div>
     </section>
 
-    <section id="featured-products" class="px-6 lg:px-20 py-20 bg-[#F7F2EB]">
-        <h3 class="text-3xl lg:text-4xl font-semibold text-center text-gray-800 mb-12 site-font">
+    <section id="featured-products" class="px-4 lg:px-12 py-16 bg-[#F7F2EB]">
+        <h3 class="text-2xl lg:text-3xl font-serif font-semibold text-center text-brand-dark mb-10">
             New Arrivals
         </h3>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
             @forelse($featuredProducts as $product)
                 <x-product-card :product="$product" />
             @empty
-                <p class="text-lg text-gray-500 col-span-full text-center">
-                    No featured products available.
-                </p>
+                <p class="text-gray-500 col-span-full text-center">No featured products available.</p>
             @endforelse
         </div>
     </section>

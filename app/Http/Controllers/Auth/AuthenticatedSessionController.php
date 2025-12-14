@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Session;
+use Filament\Facades\Filament;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -35,7 +37,7 @@ class AuthenticatedSessionController extends Controller
         $this->mergeSessionCartIntoDatabase($user);
 
         if ($user->is_admin) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->to(Filament::getPanel('admin')->getUrl());
         }
 
         return redirect()->intended(route('home', absolute: false));
@@ -67,17 +69,17 @@ class AuthenticatedSessionController extends Controller
 
             // Check if item exists for this user
             $dbItem = CartItem::where('user_id', $user->id) // Query by user_id
-                              ->where('product_id', $productId)
-                              ->first();
+                ->where('product_id', $productId)
+                ->first();
 
             if ($dbItem) {
                 // Update quantity logic...
-                 $newQuantity = min($dbItem->quantity + $quantity, $product->stock);
-                 $dbItem->quantity = $newQuantity;
-                 $dbItem->save();
+                $newQuantity = min($dbItem->quantity + $quantity, $product->stock);
+                $dbItem->quantity = $newQuantity;
+                $dbItem->save();
             } else {
                 // Create new item linked directly to user
-                 CartItem::create([
+                CartItem::create([
                     'user_id'    => $user->id, // Use user_id
                     'product_id' => $productId,
                     'quantity'   => min($quantity, $product->stock),
