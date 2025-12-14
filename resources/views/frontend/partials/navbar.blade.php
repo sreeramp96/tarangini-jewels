@@ -1,4 +1,4 @@
-<header class="flex flex-col bg-[#0b3d2e]/90 backdrop-blur-md sticky top-0 z-50 shadow-md site-font">
+<header class="flex flex-col bg-[#1B211A]/90 backdrop-blur-md sticky top-0 z-50 shadow-md site-font">
     <div class="flex justify-between items-center w-full px-6 lg:px-20 py-4">
 
         <a href="{{ url('/') }}" class="flex items-center space-x-2 shrink-0">

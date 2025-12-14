@@ -1,30 +1,30 @@
-<footer class="bg-brand-green-dark text-white border-t border-brand-gold/20" id="contact">
+<footer class="bg-[#1B211A]/90" id="contact">
     <div class="max-w-7xl mx-auto px-6 lg:px-20 py-16">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
 
             <div class="md:col-span-1">
-                <h3 class="text-3xl font-bold hero-text text-brand-gold mb-6">Tarangini Jewels</h3>
-                <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                <h3 class="text-3xl font-bold site-font text-gold-gradient mb-6">Tarangini Jewels</h3>
+                <p class="text-gray-400 text-sm mb-6 leading-relaxed site-font">
                     Crafting timeless elegance with a touch of divine grace. Our jewelry is a celebration of heritage and beauty.
                 </p>
                 <div class="space-y-3 text-gray-300">
                     <p class="flex items-center hover:text-brand-gold transition-colors">
                         <x-heroicon-o-phone class="w-5 h-5 mr-3 shrink-0 text-brand-gold" />
-                        <span>+91 987 654 3210</span>
+                        <span>+91 940 094 7437</span>
                     </p>
                     <p class="flex items-center hover:text-brand-gold transition-colors">
                         <x-heroicon-o-envelope class="w-5 h-5 mr-3 shrink-0 text-brand-gold" />
-                        <span>info@tarangini.com</span>
+                        <span>jewelstarangini@gmail.com</span>
                     </p>
                     <p class="flex items-center hover:text-brand-gold transition-colors">
                         <x-heroicon-o-map-pin class="w-5 h-5 mr-3 shrink-0 text-brand-gold" />
-                        <span>123 Jewel Street, Gold City</span>
+                        <span>North Paravoor, Kerala</span>
                     </p>
                 </div>
             </div>
 
-            <div>
-                <h4 class="text-lg font-semibold hero-text text-brand-gold mb-6">Collections</h4>
+            {{-- <div>
+                <h4 class="text-lg font-semibold text-brand-gold mb-6">Collections</h4>
                 <nav class="flex flex-col space-y-3">
                     <a href="#" class="text-gray-400 hover:text-brand-gold hover:translate-x-1 transition-all duration-300">Rings</a>
                     <a href="#" class="text-gray-400 hover:text-brand-gold hover:translate-x-1 transition-all duration-300">Necklaces</a>
@@ -43,21 +43,21 @@
                     <a href="#" class="text-gray-400 hover:text-brand-gold hover:translate-x-1 transition-all duration-300">Return Policy</a>
                     <a href="#" class="text-gray-400 hover:text-brand-gold hover:translate-x-1 transition-all duration-300">Contact Us</a>
                 </nav>
-            </div>
+            </div> --}}
 
             <div>
                 <h4 class="text-lg font-semibold hero-text text-brand-gold mb-6">Follow Us</h4>
                 <p class="text-gray-400 mb-6 text-sm">Stay updated with our latest designs and offers.</p>
                 <div class="flex space-x-4">
-                    <a href="#" class="bg-white/10 p-2 rounded-full text-brand-gold hover:bg-brand-gold hover:text-brand-green-dark transition-all duration-300" aria-label="Instagram">
+                    <a href="https://www.instagram.com/tarangini_jewels/" class="bg-white/10 p-2 rounded-full text-brand-gold hover:bg-brand-gold hover:text-brand-green-dark transition-all duration-300" aria-label="Instagram">
                         <x-heroicon-o-camera class="w-6 h-6" />
                     </a>
-                    <a href="#" class="bg-white/10 p-2 rounded-full text-brand-gold hover:bg-brand-gold hover:text-brand-green-dark transition-all duration-300" aria-label="Facebook">
+                    <a href="https://www.facebook.com/profile.php?id=61576994169989" class="bg-white/10 p-2 rounded-full text-brand-gold hover:bg-brand-gold hover:text-brand-green-dark transition-all duration-300" aria-label="Facebook">
                         <x-heroicon-o-share class="w-6 h-6" />
                     </a>
-                    <a href="#" class="bg-white/10 p-2 rounded-full text-brand-gold hover:bg-brand-gold hover:text-brand-green-dark transition-all duration-300" aria-label="Twitter">
+                    {{-- <a href="#" class="bg-white/10 p-2 rounded-full text-brand-gold hover:bg-brand-gold hover:text-brand-green-dark transition-all duration-300" aria-label="Twitter">
                         <x-heroicon-o-hashtag class="w-6 h-6" />
-                    </a>
+                    </a> --}}
                 </div>
             </div>
 

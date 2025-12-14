@@ -2,7 +2,6 @@
 
 <div class="bg-white rounded-lg shadow-sm overflow-hidden group relative h-full flex flex-col" x-data
      x-init="
-        // Use GSAP inside Alpine
         gsap.from($el, {
             scrollTrigger: {
                 trigger: $el,

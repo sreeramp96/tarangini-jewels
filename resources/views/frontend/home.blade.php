@@ -2,56 +2,38 @@
 @extends('layouts.frontend')
 {{-- @php $media = $product->getFirstMedia('images'); @endphp --}}
 @section('content')
+    @php
+        $slides = $heroCarouselProducts->map(function ($product) {
+            return [
+                'desktop_image' => $product->primary_image_url,
+                'mobile_image' => $product->mobile_image_url ?? $product->primary_image_url,
+                'link' => route('products.show', $product->slug),
+                'alt' => $product->name,
+            ];
+        });
+    @endphp
+    <x-hero-slider :slides="$slides" />
 
-    <section class="relative flex items-center justify-start px-6 lg:px-20 min-h-[70vh] lg:min-h-[80vh] overflow-hidden">
-        <div class="absolute inset-0 z-0" x-data="{
-                     activeSlide: 0,
-                     slides: {{ $heroCarouselProducts->count() }},
-                     autoplay: null,
-                     startAutoplay() {
-                        this.autoplay = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slides }, 5000)
-                     },
-                     stopAutoplay() { clearInterval(this.autoplay) }
-                 }" x-init="startAutoplay()">
-
-            <div class="relative w-full h-full">
-                @foreach($heroCarouselProducts as $index => $heroProduct)
-                    <div x-show="activeSlide === {{ $index }}"
-                        class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
-                        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                        x-transition:leave="opacity-100" x-transition:leave-start="opacity-100"
-                        x-transition:leave-end="opacity-0" style="display: none;">
-                        <img src="{{ $heroProduct->primary_image_url }}" alt="{{ $heroProduct->name }}"
-                            class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-black/40"></div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-
-        <div class="relative z-10 lg:w-1/2 max-w-xl text-white drop-shadow-text-readable px-4">
-            <h2 class="text-4xl lg:text-6xl font-bold mb-6 leading-tight site-font">
-                <span class="text-text-gold-gradient">Elegance Redefined</span><br>in Every Jewel
+    <section class="py-16 px-6 text-center bg-[#F7F2EB] site-font">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-4xl lg:text-5xl font-bold text-gold-gradient mb-6">
+                Elegance Redefined
             </h2>
-            <p class="text-lg text-gray-100 mb-8 leading-relaxed font-medium site-font">
+            <p class="text-gray-600 text-lg leading-relaxed mb-8">
                 Discover handcrafted luxury with a touch of divine grace. Every piece at
-                <span class="text-brand-gold font-bold site-font">Tarangini</span>
+                <span class="font-bold text-[#B48E43]">Tarangini</span>
                 embodies timeless beauty and artistry.
             </p>
-
-            <a href="#featured-products"
-                class="btn-gold px-8 py-3 rounded-sm font-semibold text-lg inline-block border-2 border-transparent hover:border-white site-font">
-                Explore Collection
-            </a>
+            <div class="h-1 w-24 bg-[#B48E43] mx-auto rounded-full"></div>
         </div>
-
     </section>
 
-    <section id="categories" class="bg-gray-100 px-6 lg:px-20 py-20">
+
+    <section id="categories" class="bg-[#F7F2EB] px-6 lg:px-20 py-20">
         <h3 class="text-3xl lg:text-4xl font-semibold text-center text-gray-800 mb-12 site-font">
             Shop by Category
         </h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 ">
             @foreach($categories as $category)
                 <a href="{{ route('categories.show', $category->slug) }}" class="group">
                     <div
@@ -68,7 +50,8 @@
                             <h4 class="text-lg font-medium text-gray-800 group-hover:text-brand-gold transition">
                                 {{ $category->name }}
                             </h4>
-                            <span class="text-sm text-gray-500 group-hover:text-brand-gold transition site-font">Explore All</span>
+                            <span class="text-sm text-gray-500 group-hover:text-brand-gold transition site-font">Explore
+                                All</span>
                         </div>
                     </div>
                 </a>
@@ -76,7 +59,7 @@
         </div>
     </section>
 
-    <section id="featured-products" class="bg-white px-6 lg:px-20 py-20">
+    <section id="featured-products" class="px-6 lg:px-20 py-20 bg-[#F7F2EB]">
         <h3 class="text-3xl lg:text-4xl font-semibold text-center text-gray-800 mb-12 site-font">
             New Arrivals
         </h3>
@@ -92,7 +75,7 @@
         </div>
     </section>
 
-    <section id="testimonials" class="bg-[#0b3d2e] px-6 lg:px-20 py-20">
+    <section id="testimonials" class="bg-[#1B211A]/90 px-6 lg:px-20 py-20">
         <h3 class="text-3xl lg:text-4xl font-semibold text-center text-gold-gradient mb-12 site-font">
             Words of Radiance
         </h3>
@@ -100,7 +83,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse($reviews as $review)
                 <div
-                    class="relative flex flex-col bg-[#0b3d2e]/70 border border-brand-gold/40 rounded-2xl p-8 text-center glow-hover transition h-full">
+                    class="relative flex flex-col bg-[#1B211A]/70 border border-brand-gold/40 rounded-2xl p-8 text-center glow-hover transition h-full">
                     <x-heroicon-s-chat-bubble-left-right class="absolute top-4 left-4 w-12 h-12 text-brand-gold/10" />
                     <p class="text-gray-300 leading-loose mb-6 z-10 relative grow">
                         "{{ Str::limit($review->comment, 150) }}"
@@ -114,7 +97,7 @@
                             @endif
                         @endforeach
                     </div>
-                    <h4 class="font-semibold hero-text text-brand-gold text-lg">
+                    <h4 class="font-semibold hero-text text-gold-gradient text-lg">
                         {{ $review->user->name ?? 'Guest Customer' }}
                     </h4>
                     <p class="text-gray-400 text-sm mt-1">
@@ -129,7 +112,7 @@
         </div>
     </section>
 
-    <section id="about" class="bg-[#0b3d2e] px-6 lg:px-20 py-20 text-center site-font">
+    <section id="about" class="bg-[#1B211A]/90 px-6 lg:px-20 py-20 text-center site-font">
         <h3 class="text-3xl lg:text-4xl font-semibold text-gold-gradient mb-6">About Tarangini</h3>
         <p class="max-w-2xl mx-auto text-gray-300 leading-relaxed">
             At Tarangini Jewels, we blend ancient craftsmanship with modern elegance.
