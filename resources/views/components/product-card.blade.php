@@ -1,11 +1,12 @@
 @props(['product'])
 
-<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group relative h-full flex flex-col transition-all hover:shadow-lg"
+<div
+    class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group relative h-full flex flex-col transition-all hover:shadow-lg"
     x-data>
 
     <a href="{{ route('products.show', $product->slug) }}" class="block relative aspect-4/5 overflow-hidden">
         <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}"
-            class="w-full h-full object-cover transition duration-700 ease-in-out group-hover:scale-105">
+             class="w-full h-full object-cover transition duration-700 ease-in-out group-hover:scale-105">
 
         <div class="absolute top-2 left-2 flex flex-col space-y-1">
             @if($product->discount_price && $product->price > 0)
@@ -29,7 +30,7 @@
             <div class="flex text-[#B48E43]">
                 @for($i = 0; $i < 5; $i++)
                     <x-heroicon-s-star
-                        class="w-3 h-3 {{ $i < round($product->reviews_avg_rating) ? 'opacity-100' : 'opacity-30 text-gray-400' }}" />
+                        class="w-3 h-3 {{ $i < round($product->reviews_avg_rating) ? 'opacity-100' : 'opacity-30 text-gray-400' }}"/>
                 @endfor
             </div>
             <span class="text-[10px] text-gray-400">({{ $product->reviews_count }})</span>
@@ -45,11 +46,12 @@
         </div>
 
         <div class="mt-auto">
-            <form action="{{ route('cart.store', $product->id) }}" method="POST" x-data="addToCartForm" @submit.prevent="submit>
+            <form action="{{ route('cart.store', $product->id) }}" method="POST" x-data="addToCartForm"
+                  @submit.prevent="submit">
                 @csrf
-                <input type=" hidden" name="quantity" value="1">
+                <input type="hidden" name="quantity" value="1">
                 <button type="submit"
-                    class="w-full bg-[#1B211A] text-[#EBD5AB] text-xs font-bold uppercase tracking-widest py-2.5 rounded-sm hover:bg-[#628141] hover:text-white transition-colors">
+                        class="w-full bg-[#1B211A] text-[#EBD5AB] text-xs font-bold uppercase tracking-widest py-2.5 rounded-sm hover:bg-[#628141] hover:text-white transition-colors">
                     Add to Cart
                 </button>
             </form>
@@ -59,8 +61,8 @@
     <form action="{{ route('wishlist.add', $product->id) }}" method="POST" class="absolute top-2 right-2 z-10">
         @csrf
         <button type="submit"
-            class="bg-white/90 p-1.5 rounded-full shadow-sm text-gray-400 hover:text-red-500 transition hover:scale-110">
-            <x-heroicon-o-heart class="w-4 h-4" />
+                class="bg-white/90 p-1.5 rounded-full shadow-sm text-gray-400 hover:text-red-500 transition hover:scale-110">
+            <x-heroicon-o-heart class="w-4 h-4"/>
         </button>
     </form>
 </div>

@@ -16,16 +16,17 @@
                 <div>
                     <div class="border border-brand-gold/40 rounded-2xl p-2 mb-4">
                         <img :src="primaryImage" alt="{{ $product->name }}"
-                            class="w-full h-[500px] object-cover rounded-xl">
+                             class="w-full h-[500px] object-cover rounded-xl">
                     </div>
 
                     <div class="flex space-x-4 overflow-x-auto pb-2">
                         <template x-for="image in images" :key="image">
                             <button @click="primaryImage = image"
-                                class="shrink-0 w-24 h-24 border-2 rounded-lg p-1 transition :class="
-                                primaryImage===image ? 'border-brand-gold'
-                                : 'border-transparent opacity-60 hover:opacity-100'"> <img :src=" image" alt="Thumbnail"
-                                class="w-full h-full object-cover rounded-md">
+                                    class="shrink-0 w-24 h-24 border-2 rounded-lg p-1 transition :class="
+                                    primaryImage===image ?
+                            'border-brand-gold'
+                            : 'border-transparent opacity-60 hover:opacity-100'"> <img :src=" image" alt="Thumbnail"
+                                                                                       class="w-full h-full object-cover rounded-md">
                             </button>
                         </template>
                     </div>
@@ -39,7 +40,8 @@
 
                     <div class="my-6">
                         @if($product->discount_price)
-                            <span class="line-through text-2xl text-gray-500">₹{{ number_format($product->price, 2) }}</span>
+                            <span
+                                class="line-through text-2xl text-gray-500">₹{{ number_format($product->price, 2) }}</span>
                             <span
                                 class="font-bold text-4xl text-white ml-3">₹{{ number_format($product->discount_price, 2) }}</span>
                         @else
@@ -53,26 +55,26 @@
 
                     <div class="flex items-center space-x-4">
                         <form x-data="addToCartForm" @submit.prevent="submit"
-                            action="{{ route('cart.store', $product->id) }}" method="POST" class="mt-8">
+                              action="{{ route('cart.store', $product->id) }}" method="POST" class="mt-8">
 
                             <div class="flex items-center space-x-4">
                                 <div class="w-24">
                                     <label for="quantity" class="sr-only">Quantity</label>
                                     <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}"
-                                        class="w-full px-3 py-3 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-brand-gold text-center">
+                                           class="w-full px-3 py-3 border border-gray-300 rounded-md shadow-xs focus:outline-hidden focus:ring-brand-gold text-center">
                                 </div>
 
                                 <button type="submit"
-                                    class="grow btn-gold px-8 py-4 rounded-sm font-semibold text-lg flex justify-center items-center"
-                                    :disabled="loading || {{ $product->stock <= 0 ? 'true' : 'false' }}"
-                                    :class="{ 'opacity-75 cursor-not-allowed': loading }">
+                                        class="grow btn-gold px-8 py-4 rounded-sm font-semibold text-lg flex justify-center items-center"
+                                        :disabled="loading || {{ $product->stock <= 0 ? 'true' : 'false' }}"
+                                        :class="{ 'opacity-75 cursor-not-allowed': loading }">
 
                                     <svg x-show="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="4"></circle>
+                                                stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                         </path>
                                     </svg>
 
@@ -81,7 +83,7 @@
                                 </button>
 
                                 <button type="button" class="p-4 border border-brand-gold/40 rounded-sm glow-hover">
-                                    <x-heroicon-o-heart class="w-6 h-6 text-brand-gold" />
+                                    <x-heroicon-o-heart class="w-6 h-6 text-brand-gold"/>
                                 </button>
                             </div>
                         </form>
@@ -98,7 +100,7 @@
                         class="bg-[#0b3d2e]/70 border border-brand-gold/40 rounded-2xl overflow-hidden shadow-lg glow-hover transition p-2">
                         <a href="{{ route('products.show', $relatedProduct->slug) }}">
                             <img src="{{ $relatedProduct->primary_image_url }}" alt="{{ $relatedProduct->name }}"
-                                class="w-full h-64 object-cover rounded-xl">
+                                 class="w-full h-64 object-cover rounded-xl">
                             <div class="p-5 hero-text">
                                 <h4 class="text-xl font-medium text-brand-gold truncate">{{ $relatedProduct->name }}</h4>
                                 <p class="text-gray-300 text-sm mt-2">
@@ -127,7 +129,7 @@
 
                     @auth
                         <form action="{{ route('reviews.store', $product->id) }}" method="POST"
-                            class="bg-gray-50 p-6 rounded-lg shadow-md">
+                              class="bg-gray-50 p-6 rounded-lg shadow-md">
                             @csrf
                             <p class="text-gray-600 mb-4">Share your thoughts with other customers:</p>
 
@@ -136,31 +138,33 @@
                                 <div class="flex items-center space-x-1" x-data="{ rating: 0, hoverRating: 0 }">
                                     <template x-for="star in 5" :key="star">
                                         <button @click.prevent="rating = star" @mouseenter="hoverRating = star"
-                                            @mouseleave="hoverRating = 0" class="text-gray-300 transition" :class="{
+                                                @mouseleave="hoverRating = 0" class="text-gray-300 transition" :class="{
                                                                                                 'text-yellow-400': hoverRating >= star,
                                                                                                 'text-yellow-500': rating >= star && hoverRating === 0
                                                                                             }">
-                                            <x-heroicon-s-star class="w-8 h-8" />
+                                            <x-heroicon-s-star class="w-8 h-8"/>
                                         </button>
                                     </template>
                                     <input type="hidden" name="rating" x-model="rating">
                                 </div>
-                                <x-input-error :messages="$errors->get('rating')" class="mt-2" />
+                                <x-input-error :messages="$errors->get('rating')" class="mt-2"/>
                             </div>
 
                             <div class="mb-4">
-                                <x-input-label for="comment" :value="__('Your Comment')" />
+                                <x-input-label for="comment" :value="__('Your Comment')"/>
                                 <textarea id="comment" name="comment" rows="4"
-                                    class="block w-full mt-1 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md shadow-xs">{{ old('comment') }}</textarea>
-                                <x-input-error :messages="$errors->get('comment')" class="mt-2" />
+                                          class="block w-full mt-1 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md shadow-xs">{{ old('comment') }}</textarea>
+                                <x-input-error :messages="$errors->get('comment')" class="mt-2"/>
                             </div>
 
-                            <button type="submit" class="btn-gold px-6 py-2 rounded-sm font-medium">Submit Review</button>
+                            <button type="submit" class="btn-gold px-6 py-2 rounded-sm font-medium">Submit Review
+                            </button>
                         </form>
                     @else
                         <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center">
                             <p class="text-gray-600">You must be <a href="{{ route('login') }}"
-                                    class="text-brand-gold hover:underline font-semibold">logged in</a> to leave a review.</p>
+                                                                    class="text-brand-gold hover:underline font-semibold">logged
+                                    in</a> to leave a review.</p>
                         </div>
                     @endauth
                 </div>
@@ -171,10 +175,12 @@
                         @forelse($product->reviews as $review)
                             <div class="border-b border-gray-200 pb-6">
                                 <div class="flex items-center mb-2">
-                                    <img src="{{ $review->user->avatar ? Storage::url($review->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($review->user->name) . '&color=7F9CF5&background=EBF4FF' }}"
+                                    <img
+                                        src="{{ $review->user->avatar ? Storage::url($review->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($review->user->name) . '&color=7F9CF5&background=EBF4FF' }}"
                                         alt="{{ $review->user->name }}" class="w-10 h-10 rounded-full object-cover">
                                     <div class="ml-3">
-                                        <span class="font-semibold text-gray-800 hero-text">{{ $review->user->name }}</span>
+                                        <span
+                                            class="font-semibold text-gray-800 hero-text">{{ $review->user->name }}</span>
                                         <span
                                             class="text-sm text-gray-500 ml-2">{{ $review->created_at->diffForHumans() }}</span>
                                     </div>
@@ -183,7 +189,7 @@
                                 <div class="flex items-center mb-3">
                                     @for ($i = 1; $i <= 5; $i++)
                                         <x-heroicon-s-star
-                                            class="w-5 h-5 {{ $i <= $review->rating ? 'text-yellow-500' : 'text-gray-300' }}" />
+                                            class="w-5 h-5 {{ $i <= $review->rating ? 'text-yellow-500' : 'text-gray-300' }}"/>
                                     @endfor
                                 </div>
 
